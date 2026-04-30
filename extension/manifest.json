@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
-  "name": "Tab Harbor",
-  "version": "2.0.0",
+  "name": "Tab Harbor reVue",
+  "version": "1.0.1",
   "description": "Transform your browser tabs into a calm, organized workspace",
   "permissions": [
     "tabs",
