@@ -7,6 +7,7 @@ import SearchInput from '@/components/drawer/SearchInput.vue';
 import QuickLinks from './QuickLinks.vue';
 import RGBCircle from '@/components/common/RGBCircle.vue';
 import { useSettingsStore } from '@/stores/settings';
+import { handleUrlSecurityCheck } from '@/utils/helpers';
 
 const props = defineProps<{
   searchQuery: string
@@ -53,11 +54,18 @@ function toggleQuickLinks() {
 }
 
 async function openProjectRepo() {
+  const repoUrl = 'https://github.com/HarryHello/tab-harbor-revue';
+  
+  // 验证 URL 安全性
+  if (!handleUrlSecurityCheck(repoUrl, 'open')) {
+    return;
+  }
+
   // 获取当前活动标签页
   const [currentTab] = await chrome.tabs.query({ active: true, currentWindow: true });
 
   await chrome.tabs.create({
-    url: 'https://github.com/HarryHello/tab-harbor-revue',
+    url: repoUrl,
     index: currentTab.index + 1,
     active: true,
   });

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import AddLinkForm from './AddLinkForm.vue';
-import { getFaviconUrl, getInitial, getRandomColor } from '@/utils/helpers';
+import { getFaviconUrl, getInitial, getRandomColor, handleUrlSecurityCheck } from '@/utils/helpers';
 
 interface QuickLink {
   id: string;
@@ -55,8 +55,18 @@ function saveLinks() {
 // 处理添加链接
 function handleAddLink(title: string, url: string) {
   let processedUrl = url.trim();
-  if (!processedUrl.startsWith('http://') && !processedUrl.startsWith('https://')) {
+  
+  // 先检查是否已经有协议头
+  const hasProtocol = /^[a-zA-Z][a-zA-Z0-9+.-]*:/.test(processedUrl);
+  
+  // 只有没有协议头且不是特殊协议时，才添加 https://
+  if (!hasProtocol) {
     processedUrl = 'https://' + processedUrl;
+  }
+
+  // 验证 URL 安全性
+  if (!handleUrlSecurityCheck(processedUrl, 'add')) {
+    return;
   }
 
   links.value.push({
@@ -89,6 +99,30 @@ function handleImageError(linkId: string) {
 }
 
 function openLink(url: string) {
+  // 验证 URL 安全性
+  if (!handleUrlSecurityCheck(url, 'open')) {
+    return;
+  }
+  
+  // 特殊处理 file:// 协议 - 浏览器不允许直接从网页打开本地文件
+  if (url.startsWith('file://')) {
+    const confirmed = confirm(
+      `📁 Local File Link\n\n` +
+      `Browsers don't allow opening local files directly from web pages.\n\n` +
+      `Would you like to copy the file path to clipboard?\n\n` +
+      `You can then paste it into your file explorer or browser address bar.`
+    );
+    
+    if (confirmed) {
+      navigator.clipboard.writeText(url).then(() => {
+        alert('✅ File path copied to clipboard!');
+      }).catch(() => {
+        alert('❌ Failed to copy. Please copy manually:\n\n' + url);
+      });
+    }
+    return;
+  }
+  
   window.open(url, '_blank');
 }
 </script>

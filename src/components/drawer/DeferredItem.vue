@@ -4,7 +4,7 @@
 >
 import type { DeferredItem } from '@/types';
 import { useDeferredStore } from '@/stores';
-import { getFaviconUrl, getInitial, getRandomColor } from '@/utils/helpers';
+import { getFaviconUrl, getInitial, getRandomColor, handleUrlSecurityCheck } from '@/utils/helpers';
 
 const props = defineProps<{
   item: DeferredItem
@@ -17,6 +17,34 @@ async function remove() {
 }
 
 async function openInNewTab() {
+  // 验证 URL 安全性
+  if (!handleUrlSecurityCheck(props.item.url, 'open')) {
+    return;
+  }
+
+  // 特殊处理 file:// 协议 - 浏览器不允许直接从扩展打开本地文件
+  if (props.item.url.startsWith('file://')) {
+    const confirmed = confirm(
+      `📁 Local File Link\n\n` +
+      `Browsers don't allow opening local files directly from extensions.\n\n` +
+      `Would you like to copy the file path to clipboard?\n\n` +
+      `You can then paste it into your file explorer or browser address bar.`
+    );
+    
+    if (confirmed) {
+      try {
+        await navigator.clipboard.writeText(props.item.url);
+        alert('✅ File path copied to clipboard!');
+      } catch {
+        alert('❌ Failed to copy. Please copy manually:\n\n' + props.item.url);
+      }
+    }
+    
+    // 从暂存列表中移除（无论是否复制成功）
+    await deferredStore.remove(props.item.id);
+    return;
+  }
+
   // 获取当前活动标签页
   const [currentTab] = await chrome.tabs.query({ active: true, currentWindow: true });
 
