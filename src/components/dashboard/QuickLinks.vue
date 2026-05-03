@@ -167,47 +167,4 @@ function openLink(url: string) {
   grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
   gap:                   var(--space-3);
 }
-
-.link-input {
-  font-size:     0.8125rem;
-  width:         100%;
-  padding:       var(--space-2);
-  border:        1px solid var(--theme-c-border);
-  border-radius: var(--radius-md);
-  outline:       none;
-}
-
-.link-input:focus {
-  border-color: var(--theme-c-accent);
-}
-
-.link-actions {
-  display:    flex;
-  margin-top: var(--space-2);
-  gap:        var(--space-2);
-}
-
-.link-btn {
-  font-size:     0.75rem;
-  flex:          1;
-  padding:       var(--space-2);
-  cursor:        pointer;
-  transition:    opacity var(--transition-fast);
-  border:        none;
-  border-radius: var(--radius-md);
-}
-
-.link-btn:hover {
-  opacity: 0.8;
-}
-
-.link-btn--cancel {
-  color:      var(--theme-c-text);
-  background: var(--theme-c-border);
-}
-
-.link-btn--save {
-  color:      white;
-  background: var(--theme-c-accent);
-}
 </style>
