@@ -4,7 +4,8 @@
 >
 import { onMounted, ref } from 'vue';
 import AddLinkForm from './AddLinkForm.vue';
-import { getFaviconUrl, getInitial, getRandomColor, handleUrlSecurityCheck } from '@/utils/helpers';
+import QuickLinkItem from './QuickLinkItem.vue';
+import { handleUrlSecurityCheck } from '@/utils/helpers';
 
 interface QuickLink {
   id: string;
@@ -28,7 +29,6 @@ const defaultLinks: QuickLink[] = [
 
 const links = ref<QuickLink[]>([]);
 const addLinkFormRef = ref<InstanceType<typeof AddLinkForm>>();
-const imageErrors = ref<Record<string, boolean>>({});
 
 // 从 localStorage 加载链接
 function loadLinks() {
@@ -93,12 +93,11 @@ onMounted(() => {
 
 function removeLink(id: string) {
   links.value = links.value.filter(link => link.id !== id);
-  delete imageErrors.value[id];
   saveLinks(); // 保存更改
 }
 
-function handleImageError(linkId: string) {
-  imageErrors.value[linkId] = true;
+function handleLinkClick(url: string) {
+  openLink(url);
 }
 
 function openLink(url: string) {
@@ -137,43 +136,13 @@ function openLink(url: string) {
       class="quick-links-title"
     >Quick Links</h3>
     <div class="links-grid">
-      <div
+      <QuickLinkItem
         v-for="link in links"
         :key="link.id"
-        class="link-card"
-        @click="openLink(link.url)"
-      >
-        <div
-          v-if="!imageErrors[link.id]"
-          class="link-icon"
-        >
-          <img
-            :src="getFaviconUrl(link.url)"
-            :alt="link.title"
-            class="link-favicon"
-            @error="handleImageError(link.id)"
-          />
-        </div>
-        <div
-          v-else
-          class="link-icon"
-        >
-          <div
-            class="link-avatar"
-            :style="{ backgroundColor: getRandomColor(link.url) }"
-          >
-            {{ getInitial(link.title) }}
-          </div>
-        </div>
-        <span class="link-title">{{ link.title }}</span>
-        <button
-          class="link-remove"
-          title="Remove"
-          @click.stop="removeLink(link.id)"
-        >
-          ×
-        </button>
-      </div>
+        :link="link"
+        @click="handleLinkClick"
+        @remove="removeLink"
+      />
 
       <button
         class="link-card link-card--add"
@@ -240,84 +209,26 @@ function openLink(url: string) {
   gap:            var(--space-2);
 }
 
-.link-icon {
-  display:         flex;
-  align-items:     center;
-  justify-content: center;
-  width:           48px;
-  height:          48px;
-  transition:      all var(--transition-base);
-  border:          none;
-  border-radius:   50%;
-  background:      var(--theme-c-card-bg);
-}
-
-.link-card:hover .link-icon {
-  background: var(--theme-c-border);
-}
-
-.link-icon--add {
-  color: var(--theme-c-text-muted);
-}
-
 .link-icon--add svg {
   width:  24px;
   height: 24px;
 }
 
 .link-card--add {
+  position:       relative;
+  display:        flex;
+  align-items:    center;
+  flex-direction: column;
+  padding:        8px 0;
+  cursor:         pointer;
+  border:         none;
+  border-radius:  var(--radius-lg);
+  background:     none;
+  gap:            var(--space-2);
   opacity: 0.7;
 }
 
 .link-card--add:hover {
-  opacity: 1;
-}
-
-.link-favicon {
-  width:      28px;
-  height:     28px;
-  object-fit: contain;
-}
-
-.link-avatar {
-  font-family:     var(--font-display);
-  font-size:       0.875rem;
-  font-weight:     600;
-  display:         flex;
-  align-items:     center;
-  justify-content: center;
-  width:           28px;
-  height:          28px;
-  text-transform:  uppercase;
-  color:           white;
-  border-radius:   50%;
-}
-
-.link-title {
-  font-size:  0.8125rem;
-  text-align: center;
-  word-break: break-word;
-  color:      var(--theme-c-text);
-}
-
-.link-remove {
-  font-size:     14px;
-  line-height:   1;
-  position:      absolute;
-  top:           4px;
-  right:         4px;
-  width:         18px;
-  height:        18px;
-  cursor:        pointer;
-  transition:    opacity var(--transition-fast);
-  opacity:       0;
-  color:         var(--error);
-  border:        none;
-  border-radius: 50%;
-  background:    var(--error-light);
-}
-
-.link-card:hover .link-remove {
   opacity: 1;
 }
 
