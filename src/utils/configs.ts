@@ -1,6 +1,6 @@
 import { useThemeStore } from '@/stores/theme';
 import { useSettingsStore } from '@/stores/settings';
-import { useDeferredStore, useQuickLinksStore, useShortcutsStore, useTodosStore } from '@/stores/items';
+import { useDeferredStore, useQuickLinksStore, useTodosStore } from '@/stores/items';
 import type { configV1 } from '@/types/config';
 
 // 获取当前扩展版本（从 manifest.json）
@@ -16,7 +16,6 @@ export async function exportConfigs() {
     const settingsStore = useSettingsStore();
     const deferredStore = useDeferredStore();
     const todosStore = useTodosStore();
-    const shortcutsStore = useShortcutsStore();
     const quickLinksStore = useQuickLinksStore();
 
     // 构建配置对象
