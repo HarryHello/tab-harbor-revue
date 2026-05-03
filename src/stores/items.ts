@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import type { DeferredItem, Todo, Shortcut } from '@/types'
+import { handleUrlSecurityCheck } from '@/utils/helpers'
 
 const STORAGE_KEYS = {
   deferred: 'tabHarborDeferred',
@@ -47,6 +48,11 @@ export const useDeferredStore = defineStore('deferred', () => {
   }
 
   async function add(url: string, title: string) {
+    // 验证 URL 安全性
+    if (!handleUrlSecurityCheck(url, 'add')) {
+      throw new Error('Invalid or unsafe URL');
+    }
+
     const item: DeferredItem = {
       id: crypto.randomUUID(),
       url,
@@ -220,6 +226,11 @@ export const useShortcutsStore = defineStore('shortcuts', () => {
   }
 
   async function add(url: string, title: string, favIconUrl?: string) {
+    // 验证 URL 安全性
+    if (!handleUrlSecurityCheck(url, 'add')) {
+      throw new Error('Invalid or unsafe URL');
+    }
+
     const shortcut: Shortcut = {
       id: crypto.randomUUID(),
       url,
