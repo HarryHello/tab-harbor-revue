@@ -1,4 +1,7 @@
-<script setup lang="ts">
+<script
+  setup
+  lang="ts"
+>
 import { onMounted, ref } from 'vue';
 import AddLinkForm from './AddLinkForm.vue';
 import { getFaviconUrl, getInitial, getRandomColor, handleUrlSecurityCheck } from '@/utils/helpers';
@@ -55,10 +58,10 @@ function saveLinks() {
 // 处理添加链接
 function handleAddLink(title: string, url: string) {
   let processedUrl = url.trim();
-  
+
   // 先检查是否已经有协议头
   const hasProtocol = /^[a-zA-Z][a-zA-Z0-9+.-]*:/.test(processedUrl);
-  
+
   // 只有没有协议头且不是特殊协议时，才添加 https://
   if (!hasProtocol) {
     processedUrl = 'https://' + processedUrl;
@@ -103,7 +106,7 @@ function openLink(url: string) {
   if (!handleUrlSecurityCheck(url, 'open')) {
     return;
   }
-  
+
   // 特殊处理 file:// 协议 - 浏览器不允许直接从网页打开本地文件
   if (url.startsWith('file://')) {
     const confirmed = confirm(
@@ -112,7 +115,7 @@ function openLink(url: string) {
       `Would you like to copy the file path to clipboard?\n\n` +
       `You can then paste it into your file explorer or browser address bar.`
     );
-    
+
     if (confirmed) {
       navigator.clipboard.writeText(url).then(() => {
         alert('✅ File path copied to clipboard!');
@@ -122,14 +125,17 @@ function openLink(url: string) {
     }
     return;
   }
-  
+
   window.open(url, '_blank');
 }
 </script>
 
 <template>
   <div class="quick-links">
-    <h3 v-if="props.showTitle !== false" class="quick-links-title">Quick Links</h3>
+    <h3
+      v-if="props.showTitle !== false"
+      class="quick-links-title"
+    >Quick Links</h3>
     <div class="links-grid">
       <div
         v-for="link in links"
@@ -151,9 +157,13 @@ function openLink(url: string) {
         <div
           v-else
           class="link-icon"
-          :style="{ backgroundColor: getRandomColor(link.title) }"
         >
-          {{ getInitial(link.title) }}
+          <div
+            class="link-avatar"
+            :style="{ backgroundColor: getRandomColor(link.url) }"
+          >
+            {{ getInitial(link.title) }}
+          </div>
         </div>
         <span class="link-title">{{ link.title }}</span>
         <button
@@ -170,8 +180,17 @@ function openLink(url: string) {
         @click="addLinkFormRef?.openForm()"
       >
         <div class="link-icon link-icon--add">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M12 5v14M5 12h14" stroke-linecap="round" stroke-linejoin="round" />
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path
+              d="M12 5v14M5 12h14"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
           </svg>
         </div>
         <span class="link-title">Add Link</span>
@@ -187,47 +206,50 @@ function openLink(url: string) {
   </div>
 </template>
 
-<style scoped lang="scss">
+<style
+  scoped
+  lang="scss"
+>
 .quick-links {
   margin-top: var(--space-6);
 }
 
 .quick-links-title {
-  font-size: 0.875rem;
+  font-size:     0.875rem;
   margin-bottom: var(--space-3);
-  text-align: left;
-  color: var(--theme-c-text-muted);
+  text-align:    left;
+  color:         var(--theme-c-text-muted);
 }
 
 .links-grid {
-  display: grid;
+  display:               grid;
   grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-  gap: var(--space-3);
+  gap:                   var(--space-3);
 }
 
 .link-card {
-  position: relative;
-  display: flex;
-  align-items: center;
+  position:       relative;
+  display:        flex;
+  align-items:    center;
   flex-direction: column;
-  padding: 8px 0;
-  cursor: pointer;
-  border: none;
-  border-radius: var(--radius-lg);
-  background: none;
-  gap: var(--space-2);
+  padding:        8px 0;
+  cursor:         pointer;
+  border:         none;
+  border-radius:  var(--radius-lg);
+  background:     none;
+  gap:            var(--space-2);
 }
 
 .link-icon {
-  display: flex;
-  align-items: center;
+  display:         flex;
+  align-items:     center;
   justify-content: center;
-  width: 48px;
-  height: 48px;
-  transition: all var(--transition-base);
-  border: none;
-  border-radius: 50%;
-  background: var(--theme-c-card-bg);
+  width:           48px;
+  height:          48px;
+  transition:      all var(--transition-base);
+  border:          none;
+  border-radius:   50%;
+  background:      var(--theme-c-card-bg);
 }
 
 .link-card:hover .link-icon {
@@ -239,7 +261,7 @@ function openLink(url: string) {
 }
 
 .link-icon--add svg {
-  width: 24px;
+  width:  24px;
   height: 24px;
 }
 
@@ -252,33 +274,47 @@ function openLink(url: string) {
 }
 
 .link-favicon {
-  width: 28px;
-  height: 28px;
+  width:      28px;
+  height:     28px;
   object-fit: contain;
 }
 
+.link-avatar {
+  font-family:     var(--font-display);
+  font-size:       0.875rem;
+  font-weight:     600;
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  width:           28px;
+  height:          28px;
+  text-transform:  uppercase;
+  color:           white;
+  border-radius:   50%;
+}
+
 .link-title {
-  font-size: 0.8125rem;
+  font-size:  0.8125rem;
   text-align: center;
   word-break: break-word;
-  color: var(--theme-c-text);
+  color:      var(--theme-c-text);
 }
 
 .link-remove {
-  font-size: 14px;
-  line-height: 1;
-  position: absolute;
-  top: 4px;
-  right: 4px;
-  width: 18px;
-  height: 18px;
-  cursor: pointer;
-  transition: opacity var(--transition-fast);
-  opacity: 0;
-  color: var(--error);
-  border: none;
+  font-size:     14px;
+  line-height:   1;
+  position:      absolute;
+  top:           4px;
+  right:         4px;
+  width:         18px;
+  height:        18px;
+  cursor:        pointer;
+  transition:    opacity var(--transition-fast);
+  opacity:       0;
+  color:         var(--error);
+  border:        none;
   border-radius: 50%;
-  background: var(--error-light);
+  background:    var(--error-light);
 }
 
 .link-card:hover .link-remove {
@@ -286,12 +322,12 @@ function openLink(url: string) {
 }
 
 .link-input {
-  font-size: 0.8125rem;
-  width: 100%;
-  padding: var(--space-2);
-  border: 1px solid var(--theme-c-border);
+  font-size:     0.8125rem;
+  width:         100%;
+  padding:       var(--space-2);
+  border:        1px solid var(--theme-c-border);
   border-radius: var(--radius-md);
-  outline: none;
+  outline:       none;
 }
 
 .link-input:focus {
@@ -299,18 +335,18 @@ function openLink(url: string) {
 }
 
 .link-actions {
-  display: flex;
+  display:    flex;
   margin-top: var(--space-2);
-  gap: var(--space-2);
+  gap:        var(--space-2);
 }
 
 .link-btn {
-  font-size: 0.75rem;
-  flex: 1;
-  padding: var(--space-2);
-  cursor: pointer;
-  transition: opacity var(--transition-fast);
-  border: none;
+  font-size:     0.75rem;
+  flex:          1;
+  padding:       var(--space-2);
+  cursor:        pointer;
+  transition:    opacity var(--transition-fast);
+  border:        none;
   border-radius: var(--radius-md);
 }
 
@@ -319,12 +355,12 @@ function openLink(url: string) {
 }
 
 .link-btn--cancel {
-  color: var(--theme-c-text);
+  color:      var(--theme-c-text);
   background: var(--theme-c-border);
 }
 
 .link-btn--save {
-  color: white;
+  color:      white;
   background: var(--theme-c-accent);
 }
 </style>
