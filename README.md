@@ -22,6 +22,8 @@ Vue 3 + TypeScript 技术栈进行了全面升级，并引入了类似 Google Ma
 
 通过智能的标签页分组、待办事项管理和快捷链接功能，帮助您提升工作效率，保持浏览器的整洁有序。
 
+*该项目当前已发布到[chrome应用商店](https://chromewebstore.google.com/detail/tab-harbor-revue/cdeaffenjkejppkffbjjihcpnhpemefp)*
+
 <table>
   <tr>
     <td width="33.33%" valign="top">
