@@ -63,63 +63,63 @@ async function save(e?: Event) {
 
 <style scoped lang="scss">
 .page-chip {
-  position: relative;
-  display: flex;
+  position:    relative;
+  display:     flex;
   align-items: center;
-  margin: 0 24px;
-  padding: var(--space-3) var(--space-4);
-  cursor: pointer;
-  transition: background-color var(--transition-fast);
-  border: none;
-  background: transparent;
-  gap: var(--space-3);
+  margin:      0 24px;
+  padding:     var(--space-3) var(--space-4);
+  cursor:      pointer;
+  transition:  background-color var(--transition-fast);
+  border:      none;
+  background:  transparent;
+  gap:         var(--space-3);
 
   // 标签页之间的间隔线
   &::before {
-    position: absolute;
-    top: 0;
-    right: 0;
-    left: 0;
-    height: 1px;
-    content: '';
-    background: var(--theme-c-border);
+    position:   absolute;
+    top:        0;
+    right:      0;
+    left:       0;
+    height:     1px;
+    content:    '';
+    background: var(--theme-c-active-bg);
   }
 }
 
 .page-chip:hover {
-  background: var(--theme-c-border);
+  background: var(--theme-c-active-bg);
 }
 
 .page-chip--active {
   .page-chip-title {
     font-weight: 600;
-    color: var(--theme-c-accent);
+    color:       var(--theme-c-accent);
   }
 }
 
 .page-chip-favicon {
-  flex-shrink: 0;
-  width: 16px;
-  height: 16px;
+  flex-shrink:   0;
+  width:         16px;
+  height:        16px;
   border-radius: 3px;
 }
 
 .page-chip-title {
-  font-size: 0.9375rem;
-  overflow: hidden;
-  flex: 1;
-  white-space: nowrap;
+  font-size:     0.9375rem;
+  overflow:      hidden;
+  flex:          1;
+  white-space:   nowrap;
   text-overflow: ellipsis;
-  color: var(--theme-c-text);
+  color:         var(--theme-c-text);
 }
 
 .page-chip-actions {
-  display: flex;
+  display:     flex;
   flex-shrink: 0;
   margin-left: auto;
-  transition: opacity var(--transition-fast);
-  opacity: 0.8;
-  gap: var(--space-1);
+  transition:  opacity var(--transition-fast);
+  opacity:     0.8;
+  gap:         var(--space-1);
 
   &--visible {
     opacity: 1;
@@ -127,28 +127,28 @@ async function save(e?: Event) {
 }
 
 .page-chip-action {
-  display: flex;
-  align-items: center;
+  display:         flex;
+  align-items:     center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
-  transition: all var(--transition-fast);
-  color: var(--theme-c-text-muted);
-  border-radius: 9999px;
+  width:           28px;
+  height:          28px;
+  transition:      all var(--transition-fast);
+  color:           var(--theme-c-text-muted);
+  border-radius:   9999px;
 }
 
 .page-chip-action:hover {
-  color: var(--theme-c-text);
+  color:      var(--theme-c-text);
   background: var(--theme-c-card-bg-2);
 }
 
 .page-chip-action--danger:hover {
-  color: var(--theme-c-danger);
+  color:      var(--theme-c-danger);
   background: color-mix(in srgb, var(--theme-c-danger) 25%, transparent);
 }
 
 .page-chip-action svg {
-  width: 16px;
+  width:  16px;
   height: 16px;
 }
 </style>

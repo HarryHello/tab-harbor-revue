@@ -137,7 +137,7 @@ function handleKeyup(event: KeyboardEvent) {
 
 .search-clear:hover {
   color:      var(--theme-c-text);
-  background: var(--theme-c-border);
+  background: var(--theme-c-active-bg);
 }
 
 .search-clear svg {

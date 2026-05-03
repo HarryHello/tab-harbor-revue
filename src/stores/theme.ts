@@ -13,6 +13,7 @@ interface ThemeColors {
   '--theme-c-danger': string;
   '--theme-c-card-bg': string;
   '--theme-c-card-bg-2': string;
+  '--theme-c-active-bg': string;
   '--shadow-sm': string;
   '--shadow-md': string;
   '--shadow-lg': string;
@@ -29,6 +30,7 @@ const THEMES: Record<ThemeId, ThemeColors> = {
     '--theme-c-danger': '#a50e0e',
     '--theme-c-card-bg': '#e8eef6',
     '--theme-c-card-bg-2': '#d2e3fc',
+    '--theme-c-active-bg': '#f4f4f4',
     '--shadow-sm': '0 1px 2px rgba(26, 22, 19, 0.05)',
     '--shadow-md': '0 4px 12px rgba(26, 22, 19, 0.08)',
     '--shadow-lg': '0 8px 24px rgba(26, 22, 19, 0.12)',
@@ -42,6 +44,7 @@ const THEMES: Record<ThemeId, ThemeColors> = {
     '--theme-c-danger': '#ea4335',
     '--theme-c-card-bg': '#303134',
     '--theme-c-card-bg-2': '#28292a',
+    '--theme-c-active-bg': '#636363',
     '--shadow-sm': '0 1px 2px rgba(0, 0, 0, 0.2)',
     '--shadow-md': '0 4px 12px rgba(0, 0, 0, 0.3)',
     '--shadow-lg': '0 8px 24px rgba(0, 0, 0, 0.4)',
@@ -82,7 +85,7 @@ export const useThemeStore = defineStore('theme', () => {
   // 从 localStorage 加载主题，如果没有则根据系统偏好设置
   function loadTheme() {
     const savedTheme = localStorage.getItem('theme') as ThemeId;
-    
+
     if (savedTheme && THEMES[savedTheme]) {
       // 有保存的主题，直接使用
       currentTheme.value = savedTheme;
@@ -91,7 +94,7 @@ export const useThemeStore = defineStore('theme', () => {
       // 首次使用，根据系统偏好设置
       const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
       const defaultTheme: ThemeId = prefersDark ? 'dark' : 'light';
-      
+
       currentTheme.value = defaultTheme;
       applyTheme(defaultTheme);
     }

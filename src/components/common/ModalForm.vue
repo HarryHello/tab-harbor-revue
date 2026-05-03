@@ -149,7 +149,7 @@ function handleOverlayClick(event: MouseEvent) {
 
   &:hover {
     color:      var(--theme-c-text);
-    background: var(--theme-c-border);
+    background: var(--theme-c-active-bg);
   }
 
   svg {
@@ -183,7 +183,7 @@ function handleOverlayClick(event: MouseEvent) {
     background: var(--theme-c-card-bg);
 
     &:hover {
-      background: var(--theme-c-border);
+      background: var(--theme-c-active-bg);
     }
   }
 

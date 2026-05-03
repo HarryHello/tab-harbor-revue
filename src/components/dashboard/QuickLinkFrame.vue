@@ -88,7 +88,7 @@ function handleClickIcon() {
   background:      var(--theme-c-card-bg);
 
   &:hover {
-    background: var(--theme-c-border);
+    background: var(--theme-c-active-bg);
   }
 }
 
@@ -130,7 +130,7 @@ function handleClickIcon() {
 
   &:hover {
     opacity:    1;
-    background: color-mix(in srgb, var(--theme-c-border) 50%, transparent);
+    background: color-mix(in srgb, var(--theme-c-active-bg) 50%, transparent);
   }
 }
 

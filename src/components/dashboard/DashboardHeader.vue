@@ -55,7 +55,7 @@ function toggleQuickLinks() {
 
 async function openProjectRepo() {
   const repoUrl = 'https://github.com/HarryHello/tab-harbor-revue';
-  
+
   // 验证 URL 安全性
   if (!handleUrlSecurityCheck(repoUrl, 'open')) {
     return;
@@ -229,7 +229,7 @@ const settingsStore = useSettingsStore();
 
   &:hover {
     color:      var(--theme-c-text);
-    background: var(--theme-c-border);
+    background: var(--theme-c-active-bg);
   }
 }
 
