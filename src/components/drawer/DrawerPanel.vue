@@ -101,6 +101,7 @@ const indicatorStyle = computed(() => {
 
   .drawer-backdrop {
     position:        absolute;
+    display:         none;
     pointer-events:  auto;
     background:      rgba(0, 0, 0, 0.3);
     inset:           0;
@@ -140,7 +141,7 @@ const indicatorStyle = computed(() => {
     .drawer-content {
       width:         720px;
       max-width:     45%;
-      max-height:    calc(100vh - 60px - var(--space-6) * 3); // 减去顶部导航和间距
+      max-height:    calc(100vh - 60px - var(--space-6) * 3);
       margin-top:    0;
       border-radius: var(--radius-lg);
     }
