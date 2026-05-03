@@ -79,15 +79,21 @@ export const useThemeStore = defineStore('theme', () => {
     localStorage.setItem('theme', themeId);
   }
 
-  // 从 localStorage 加载主题
+  // 从 localStorage 加载主题，如果没有则根据系统偏好设置
   function loadTheme() {
     const savedTheme = localStorage.getItem('theme') as ThemeId;
+    
     if (savedTheme && THEMES[savedTheme]) {
+      // 有保存的主题，直接使用
       currentTheme.value = savedTheme;
       applyTheme(savedTheme);
     } else {
-      // 默认应用浅色主题
-      applyTheme('light');
+      // 首次使用，根据系统偏好设置
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const defaultTheme: ThemeId = prefersDark ? 'dark' : 'light';
+      
+      currentTheme.value = defaultTheme;
+      applyTheme(defaultTheme);
     }
   }
 
