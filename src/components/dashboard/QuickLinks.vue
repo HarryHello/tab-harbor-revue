@@ -4,6 +4,7 @@
 >
 import { onMounted, ref } from 'vue';
 import AddLinkForm from './AddLinkForm.vue';
+import EditLinkForm from './EditLinkForm.vue';
 import QuickLinkItem from './QuickLinkItem.vue';
 import { handleUrlSecurityCheck } from '@/utils/helpers';
 
@@ -29,6 +30,7 @@ const defaultLinks: QuickLink[] = [
 
 const links = ref<QuickLink[]>([]);
 const addLinkFormRef = ref<InstanceType<typeof AddLinkForm>>();
+const editingLink = ref<QuickLink | null>(null);
 
 // 从 localStorage 加载链接
 function loadLinks() {
@@ -100,6 +102,37 @@ function handleLinkClick(url: string) {
   openLink(url);
 }
 
+function handleEditLink(link: QuickLink) {
+  editingLink.value = link;
+}
+
+function handleUpdateLink(id: string, title: string, url: string) {
+  // 验证 URL 安全性
+  if (!handleUrlSecurityCheck(url, 'add')) {
+    return;
+  }
+
+  const index = links.value.findIndex(link => link.id === id);
+  if (index !== -1) {
+    links.value[index] = {
+      ...links.value[index],
+      title: title.trim(),
+      url: url.trim(),
+    };
+    saveLinks();
+  }
+  editingLink.value = null;
+}
+
+function handleDeleteFromEdit(id: string) {
+  removeLink(id);
+  editingLink.value = null;
+}
+
+function handleCancelEdit() {
+  editingLink.value = null;
+}
+
 function openLink(url: string) {
   // 验证 URL 安全性
   if (!handleUrlSecurityCheck(url, 'open')) {
@@ -141,7 +174,7 @@ function openLink(url: string) {
         :key="link.id"
         :link="link"
         @click="handleLinkClick"
-        @remove="removeLink"
+        @edit="handleEditLink"
       />
 
       <button
@@ -171,6 +204,14 @@ function openLink(url: string) {
       ref="addLinkFormRef"
       @submit="handleAddLink"
       @cancel="handleCancel"
+    />
+
+    <!-- 编辑链接的弹窗 -->
+    <EditLinkForm
+      :link="editingLink"
+      @submit="handleUpdateLink"
+      @delete="handleDeleteFromEdit"
+      @cancel="handleCancelEdit"
     />
   </div>
 </template>

@@ -195,6 +195,16 @@ function handleOverlayClick(event: MouseEvent) {
       opacity: 0.9;
     }
   }
+
+  :deep(.modal-btn--delete) {
+    font-weight: bold;
+    color:       var(--theme-c-danger);
+    background:  color-mix(in srgb, var(--theme-c-danger) 30%, transparent);
+
+    &:hover {
+      opacity: 0.9;
+    }
+  }
 }
 
 // Modal 过渡动画
