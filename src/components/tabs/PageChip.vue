@@ -19,13 +19,13 @@ async function focus() {
 
 async function close(e?: Event) {
   e?.stopPropagation();
-  await tabsStore.closeTab(props.tab.id);
+  await tabsStore.closeTab(props.tab.id)
 }
 
 async function save(e?: Event) {
   e?.stopPropagation();
   await deferredStore.add(props.tab.url, props.tab.title);
-  await tabsStore.closeTab(props.tab.id);
+  await tabsStore.closeTab(props.tab.id)
 }
 </script>
 

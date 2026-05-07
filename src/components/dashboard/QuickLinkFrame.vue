@@ -2,7 +2,7 @@
   setup
   lang="ts"
 >
-import { MoreIcon } from '@/components/icons';
+import MoreIcon from '@/components/icons/MoreIcon.vue';
 const props = withDefaults(defineProps<{
   hide_title?: boolean,
   is_add?: boolean,

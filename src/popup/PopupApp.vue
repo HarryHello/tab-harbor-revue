@@ -1,0 +1,107 @@
+<script setup lang="ts">
+import { useTabsStore } from '@/stores'
+import { onMounted, ref } from 'vue'
+
+const tabsStore = useTabsStore()
+const tabCount = ref(0)
+
+onMounted(async () => {
+  const tabs = await chrome.tabs.query({})
+  tabCount.value = tabs.length
+})
+
+async function openNewTab() {
+  const newTabUrl = chrome.runtime.getURL('index.html')
+  const allTabs = await chrome.tabs.query({})
+  const blankTabs = allTabs.filter(
+    t => t.url === 'chrome://newtab/' || t.url === newTabUrl,
+  )
+
+  if (blankTabs.length > 0) {
+    const latest = blankTabs.reduce((a, b) => (a.id! > b.id! ? a : b))
+    await chrome.tabs.update(latest.id!, { active: true })
+    await tabsStore.closeDuplicateNewTabs()
+  } else {
+    await chrome.tabs.create({ url: newTabUrl })
+  }
+
+  window.close()
+}
+
+// openNewTab()
+</script>
+
+<template>
+  <div class="popup" @click="openNewTab">
+    <div class="logo">
+      <img src="/icons/icon128.png" alt="" width="20" height="20">
+    </div>
+    <div class="info">
+      <div class="title">Tab Harbor Vue</div>
+      <div class="subtitle">{{ tabCount }} tabs open</div>
+    </div>
+    <div class="arrow">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M7 17l9.2-9.2M17 17V7H7"/>
+      </svg>
+    </div>
+  </div>
+</template>
+
+<style scoped>
+.popup {
+  width: 280px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  user-select: none;
+  background: var(--bg-primary, #fff);
+  color: var(--text-primary, #1f1f1f);
+  transition: background 0.15s;
+  font-family: 'Google Sans', system-ui, sans-serif;
+}
+
+.popup:hover {
+  background: var(--bg-hover, #f5f5f5);
+}
+
+.popup:active {
+  background: var(--bg-active, #e8e8e8);
+}
+
+.logo {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent, #0b57d0);
+}
+
+.info {
+  flex: 1;
+  min-width: 0;
+}
+
+.title {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.3;
+  color: var(--text-primary, #1f1f1f);
+}
+
+.subtitle {
+  font-size: 12px;
+  line-height: 1.3;
+  color: var(--text-secondary, #5f6368);
+  margin-top: 2px;
+}
+
+.arrow {
+  flex-shrink: 0;
+  color: var(--text-tertiary, #9aa0a6);
+}
+</style>

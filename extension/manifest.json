@@ -8,6 +8,13 @@
     "storage",
     "search"
   ],
+  "background": {
+    "service_worker": "extension/background.ts"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Tab Harbor"
+  },
   "chrome_url_overrides": {
     "newtab": "index.html"
   },

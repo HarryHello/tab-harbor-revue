@@ -1,6 +1,6 @@
+import type { GroupedTabs, Tab } from '@/types'
 import { defineStore } from 'pinia'
-import { ref, computed, onMounted, onUnmounted } from 'vue'
-import type { Tab, GroupedTabs } from '@/types'
+import { computed, ref } from 'vue'
 
 export const useTabsStore = defineStore('tabs', () => {
   const tabs = ref<Tab[]>([])
@@ -85,6 +85,34 @@ export const useTabsStore = defineStore('tabs', () => {
     }
   }
 
+  async function closeDuplicateNewTabs() {
+    const newTabUrl = chrome.runtime.getURL('index.html')
+    const allTabs = await chrome.tabs.query({})
+
+    // 筛选出空白新标签页（Ctrl+T 打开的 chrome://newtab/ 或扩展的 index.html）
+    const blankTabs = allTabs.filter(
+      tab =>
+        tab.url === 'chrome://newtab/' ||
+        tab.url === newTabUrl ||
+        tab.url === '' ||
+        (tab.status === 'loading' && !tab.url),
+    )
+
+    console.log('Blank tabs found:', blankTabs)
+    console.log('New tab:', newTabUrl)
+
+    if (blankTabs.length <= 1) return
+
+    // 保留当前活跃的标签页，关闭其余
+    const activeTab = blankTabs.find(tab => tab.active)
+    const toKeep = activeTab || blankTabs.reduce((a, b) => (a.id! > b.id! ? a : b))
+    await Promise.all(
+      blankTabs
+        .filter(tab => tab.id !== toKeep.id)
+        .map(tab => closeTab(tab.id!)),
+    )
+  }
+
   async function focusTab(tabId: number) {
     try {
       await chrome.tabs.update(tabId, { active: true })
@@ -117,7 +145,7 @@ export const useTabsStore = defineStore('tabs', () => {
   }
 
   // 处理标签页更新（URL、标题等变化）
-  function handleTabUpdated(tabId: number, changeInfo: any, tab: chrome.tabs.Tab) {
+  function handleTabUpdated(tabId: number, _changeInfo: any, tab: chrome.tabs.Tab) {
     const index = tabs.value.findIndex(t => t.id === tabId)
     if (index === -1) return
     
@@ -170,6 +198,7 @@ export const useTabsStore = defineStore('tabs', () => {
     fetchTabs,
     closeTab,
     focusTab,
+    closeDuplicateNewTabs,
     startListening,
     stopListening,
   }
