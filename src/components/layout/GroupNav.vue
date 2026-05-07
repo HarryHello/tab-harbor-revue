@@ -37,13 +37,17 @@ function handleImageError(domain: string) {
   imageErrors.value[domain] = true;
 }
 
+let highlightTimer: ReturnType<typeof setTimeout> | null = null;
+
 function scrollToGroup(domain: string) {
   const el = document.getElementById(`group-${domain}`);
   if (el) {
     el.scrollIntoView({ behavior: 'smooth', block: 'start' });
     el.classList.add('group-highlight');
-    setTimeout(() => {
+    if (highlightTimer) clearTimeout(highlightTimer);
+    highlightTimer = setTimeout(() => {
       el.classList.remove('group-highlight');
+      highlightTimer = null;
     }, 2000);
   }
 }
@@ -190,7 +194,6 @@ function closeDrawer() {
 
 .group-nav-item:hover {
   background: var(--theme-c-border);
-  //transform: translateY(-2px);
   box-shadow: var(--shadow-sm);
 }
 

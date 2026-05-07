@@ -1,4 +1,15 @@
 /**
+ * 移除 www. 前缀并提取域名
+ */
+export function getDomain(urlStr: string): string {
+  try {
+    return new URL(urlStr).hostname.replace(/^www\./, '');
+  } catch {
+    return urlStr;
+  }
+}
+
+/**
  * 从 URL 获取 favicon 地址
  */
 export function getFaviconUrl(url: string): string {

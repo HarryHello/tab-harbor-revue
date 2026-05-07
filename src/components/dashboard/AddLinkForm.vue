@@ -2,7 +2,9 @@
 import ModalForm from '@/components/common/ModalForm.vue';
 import { WindowIcon } from '@/components/icons';
 import { useTabsStore } from '@/stores';
-import { computed, nextTick, ref } from 'vue';
+import type { Tab } from '@/types';
+import { getDomain } from '@/utils/helpers';
+import { computed, ref } from 'vue';
 
 const emit = defineEmits<{
   submit: [title: string, url: string]
@@ -14,16 +16,13 @@ const title = ref('');
 const url = ref('');
 const mode = ref<'manual' | 'tabs'>('manual');
 
-interface OpenTab {
-  id: number;
-  title: string;
-  url: string;
-  favIconUrl: string;
+interface OpenTab extends Pick<Tab, 'id' | 'title' | 'url' | 'favIconUrl'> {
+  domain: string;
 }
 
 const openTabs = ref<OpenTab[]>([]);
 const loadingTabs = ref(false);
-const transitioning = ref(false);
+const faviconErrors = ref(new Set<number>());
 
 const tabCount = computed(() => openTabs.value.length);
 
@@ -47,12 +46,11 @@ function handleCancel() {
 }
 
 async function switchToTabs() {
-  transitioning.value = true;
   mode.value = 'tabs';
   loadingTabs.value = true;
+  faviconErrors.value.clear();
   try {
     const tabsStore = useTabsStore();
-    await tabsStore.fetchTabs();
     openTabs.value = tabsStore.tabs
       .filter(tab => tab.url.startsWith('http'))
       .map(tab => ({
@@ -60,34 +58,23 @@ async function switchToTabs() {
         title: tab.title,
         url: tab.url,
         favIconUrl: tab.favIconUrl,
+        domain: getDomain(tab.url),
       }));
   } catch (error) {
     console.error('Failed to fetch open tabs:', error);
   } finally {
     loadingTabs.value = false;
-    await nextTick();
-    transitioning.value = false;
   }
 }
 
 function switchToManual() {
-  transitioning.value = true;
   mode.value = 'manual';
-  nextTick(() => { transitioning.value = false; });
 }
 
 function selectTab(tab: OpenTab) {
   title.value = tab.title;
   url.value = tab.url;
   handleSubmit();
-}
-
-function getDomain(urlStr: string): string {
-  try {
-    return new URL(urlStr).hostname.replace(/^www\./, '');
-  } catch {
-    return urlStr;
-  }
 }
 
 defineExpose({ openForm });
@@ -99,7 +86,6 @@ defineExpose({ openForm });
     :title="mode === 'manual' ? 'Add New Link' : 'Pick an Open Tab'"
     @close="handleCancel"
   >
-    <!-- Manual input mode -->
     <div v-if="mode === 'manual'" class="content-panel">
       <form class="modal-form" @submit.prevent="handleSubmit">
         <div class="form-group">
@@ -140,7 +126,6 @@ defineExpose({ openForm });
       </div>
     </div>
 
-    <!-- Open tabs picker mode -->
     <div v-else class="content-panel">
       <button
         type="button"
@@ -175,18 +160,18 @@ defineExpose({ openForm });
           >
             <div class="tab-item__favicon">
               <img
-                v-if="tab.favIconUrl"
+                v-if="tab.favIconUrl && !faviconErrors.has(tab.id)"
                 :src="tab.favIconUrl"
                 alt=""
                 width="18"
                 height="18"
-                @error="(e: Event) => (e.target as HTMLImageElement).style.display = 'none'"
+                @error="faviconErrors.add(tab.id)"
               />
               <span v-else class="tab-item__initial">{{ tab.title.charAt(0).toUpperCase() }}</span>
             </div>
             <div class="tab-item__info">
               <div class="tab-item__title">{{ tab.title }}</div>
-              <div class="tab-item__domain">{{ getDomain(tab.url) }}</div>
+              <div class="tab-item__domain">{{ tab.domain }}</div>
             </div>
             <svg class="tab-item__chevron" width="14" height="14" viewBox="0 0 14 14" fill="none">
               <path d="M5.25 2.625L9.625 7L5.25 11.375" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -202,7 +187,7 @@ defineExpose({ openForm });
       </button>
       <button
         v-if="mode === 'manual'"
-        type="submit"
+        type="button"
         class="modal-btn modal-btn--save"
         @click="handleSubmit"
       >
@@ -214,9 +199,7 @@ defineExpose({ openForm });
 
 <style scoped lang="scss">
 $ease-out: cubic-bezier(0.22, 1, 0.36, 1);
-$ease-in: cubic-bezier(0.32, 0, 0.67, 0);
 
-// ─── Manual form ───────────────────────────────────────────
 .modal-form {
   display: flex;
   flex-direction: column;
@@ -257,7 +240,6 @@ $ease-in: cubic-bezier(0.32, 0, 0.67, 0);
   }
 }
 
-// ─── Mode switch button ────────────────────────────────────
 .mode-switch {
   display: flex;
   align-items: center;
@@ -265,13 +247,6 @@ $ease-in: cubic-bezier(0.32, 0, 0.67, 0);
   margin-top: var(--space-4);
   padding-top: var(--space-3);
   border-top: 1px solid var(--theme-c-border);
-
-  &__divider {
-    font-size: 0.8125rem;
-    color: var(--theme-c-text-muted);
-    font-weight: 450;
-    white-space: nowrap;
-  }
 
   &__btn {
     display: inline-flex;
@@ -310,7 +285,6 @@ $ease-in: cubic-bezier(0.32, 0, 0.67, 0);
   }
 }
 
-// ─── Back button ───────────────────────────────────────────
 .back-btn {
   display: inline-flex;
   align-items: center;
@@ -333,7 +307,6 @@ $ease-in: cubic-bezier(0.32, 0, 0.67, 0);
   }
 }
 
-// ─── Tabs picker ───────────────────────────────────────────
 .tabs-list {
   display: flex;
   flex-direction: column;
@@ -455,7 +428,6 @@ $ease-in: cubic-bezier(0.32, 0, 0.67, 0);
   }
 }
 
-// ─── Animations ────────────────────────────────────────────
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
@@ -471,7 +443,6 @@ $ease-in: cubic-bezier(0.32, 0, 0.67, 0);
   }
 }
 
-// transition for loading/empty/list swap
 .tabs-fade-enter-active,
 .tabs-fade-leave-active {
   transition: all 0.2s $ease-out;
@@ -483,7 +454,6 @@ $ease-in: cubic-bezier(0.32, 0, 0.67, 0);
   transform: translateY(6px);
 }
 
-// ─── Scrollbar styling ─────────────────────────────────────
 .tabs-list {
   &::-webkit-scrollbar {
     width: 4px;
