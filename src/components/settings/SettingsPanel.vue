@@ -2,13 +2,13 @@
   setup
   lang="ts"
 >
-import { computed } from 'vue';
-import { type ThemeId, useThemeStore } from '@/stores/theme';
 import ModalForm from '@/components/common/ModalForm.vue';
 import Switch from '@/components/common/Switch.vue';
+import { MoonIcon, SunIcon } from '@/components/icons';
 import { useSettingsStore } from '@/stores/settings';
+import { type ThemeId, useThemeStore } from '@/stores/theme';
 import { exportConfigs, importConfigs } from '@/utils/configs';
-import { SunIcon, MoonIcon } from '@/components/icons';
+import { computed } from 'vue';
 
 const props = defineProps<{
   modelValue: boolean
@@ -83,6 +83,7 @@ const handleImportConfigs = () => {
       </section>
       <section class="settings-section settings-section--switchers">
         <h3 class="section-title">Others</h3>
+        <div class="switcher-group">
         <div class="switcher-with-label settings-show-ring">
           <Switch
             :model-value="settingsStore.settings.doShowRgbCircle"
@@ -90,6 +91,14 @@ const handleImportConfigs = () => {
           />
           <label class="switcher-label">RGB Ring</label>
         </div>
+        <div class="switcher-with-label settings-close-dup">
+          <Switch
+            :model-value="settingsStore.settings.doCloseDuplicateNewTabs"
+            @update:model-value="settingsStore.updateSetting('doCloseDuplicateNewTabs', $event)"
+          />
+          <label class="switcher-label">Auto-close duplicate new tabs</label>
+        </div>
+      </div>
       </section>
       <section class="settings-section settings-section--configs">
         <h3 class="section-title">Config File</h3>
@@ -178,6 +187,12 @@ const handleImportConfigs = () => {
     width:  100%;
     height: 100%;
   }
+}
+
+.switcher-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
 }
 
 .switcher-with-label {

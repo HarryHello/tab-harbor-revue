@@ -18,7 +18,9 @@ onMounted(async () => {
   ])
 
   nextTick()
-  await tabsStore.closeDuplicateNewTabs()
+  if (settingsStore.settings.doCloseDuplicateNewTabs) {
+    await tabsStore.closeDuplicateNewTabs()
+  }
   tabsStore.startListening()
 })
 

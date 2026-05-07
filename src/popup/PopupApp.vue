@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { useTabsStore } from '@/stores'
+import { useSettingsStore } from '@/stores/settings'
 import { onMounted, ref } from 'vue'
 
 const tabsStore = useTabsStore()
+const settingsStore = useSettingsStore()
 const tabCount = ref(0)
 
 onMounted(async () => {
@@ -20,7 +22,9 @@ async function openNewTab() {
   if (blankTabs.length > 0) {
     const latest = blankTabs.reduce((a, b) => (a.id! > b.id! ? a : b))
     await chrome.tabs.update(latest.id!, { active: true })
+    if (settingsStore.settings.doCloseDuplicateNewTabs) {
     await tabsStore.closeDuplicateNewTabs()
+  }
   } else {
     await chrome.tabs.create({ url: newTabUrl })
   }

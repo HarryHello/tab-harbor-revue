@@ -3,6 +3,7 @@ import { ref } from 'vue';
 
 export interface Settings {
   doShowRgbCircle: boolean;
+  doCloseDuplicateNewTabs: boolean;
 }
 
 const STORAGE_KEY = 'tab-harbor-settings';
@@ -10,6 +11,7 @@ const STORAGE_KEY = 'tab-harbor-settings';
 export const useSettingsStore = defineStore('settings', () => {
   const settings = ref<Settings>({
     doShowRgbCircle: true,
+    doCloseDuplicateNewTabs: false,
   });
 
   // 保存设置到 localStorage
