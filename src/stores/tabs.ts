@@ -68,7 +68,7 @@ export const useTabsStore = defineStore('tabs', () => {
         active: tab.active || false,
         favIconUrl: tab.favIconUrl || '',
         isTabOut: false,
-      }))
+      })).filter(tab => tab.url !== 'chrome://newtab/' && tab.url !== '' && tab.url !== undefined)
     } catch (error) {
       console.error('Failed to fetch tabs:', error)
     } finally {

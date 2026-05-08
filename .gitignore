@@ -43,3 +43,4 @@ tab-harbor/
 .claude/
 CLAUDE.md
 CLAUDE.local.md
+.zed/debug.json
