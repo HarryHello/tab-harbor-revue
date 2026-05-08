@@ -2,9 +2,9 @@
   setup
   lang="ts"
 >
+import OpenTabsSection from '@/components/tabs/OpenTabsSection.vue';
 import { ref } from 'vue';
 import DashboardHeader from './DashboardHeader.vue';
-import OpenTabsSection from '@/components/tabs/OpenTabsSection.vue';
 
 const searchQuery = ref('');
 </script>
