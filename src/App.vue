@@ -17,7 +17,7 @@ onMounted(async () => {
     todosStore.load(),
   ])
 
-  nextTick()
+  await nextTick()
   if (settingsStore.settings.doCloseDuplicateNewTabs) {
     await tabsStore.closeDuplicateNewTabs()
   }

@@ -38,22 +38,26 @@ function handleImageError(domain: string) {
 }
 
 let highlightTimer: ReturnType<typeof setTimeout> | null = null;
+let highlightedEl: HTMLElement | null = null;
 
 function scrollToGroup(domain: string) {
   const el = document.getElementById(`group-${domain}`);
-  if (el) {
-    if (highlightTimer) {
-      el.classList.remove('group-highlight');
-      clearTimeout(highlightTimer);
-      highlightTimer = null;
-    }
-    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    el.classList.add('group-highlight');
-    highlightTimer = setTimeout(() => {
-      el.classList.remove('group-highlight');
-      highlightTimer = null;
-    }, 2000);
+  if (!el) return;
+
+  if (highlightTimer) {
+    highlightedEl?.classList.remove('group-highlight');
+    clearTimeout(highlightTimer);
+    highlightTimer = null;
   }
+
+  el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  el.classList.add('group-highlight');
+  highlightedEl = el;
+  highlightTimer = setTimeout(() => {
+    el.classList.remove('group-highlight');
+    highlightedEl = null;
+    highlightTimer = null;
+  }, 2000);
 }
 
 async function openDrawer(tab: 'saved' | 'todos') {

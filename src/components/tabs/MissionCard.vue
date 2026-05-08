@@ -3,7 +3,7 @@
   lang="ts"
 >
 import type { GroupedTabs } from '@/types';
-import { computed, ref } from 'vue';
+import { computed, ref, nextTick, watch, onMounted } from 'vue';
 import PageChip from './PageChip.vue';
 import { GlobeIcon, ChevronIcon } from '@/components/icons';
 
@@ -18,10 +18,23 @@ const displayDomain = computed(() => {
 });
 
 const collapsed = ref(false);
+const contentEl = ref<HTMLElement | null>(null);
+const contentHeight = ref<string>('');
+
+function applyHeight() {
+  nextTick(() => {
+    if (!contentEl.value) return;
+    contentHeight.value = collapsed.value ? '0px' : `${contentEl.value.scrollHeight}px`;
+  });
+}
 
 function toggleCollapse() {
   collapsed.value = !collapsed.value;
+  applyHeight();
 }
+
+watch(tabs, applyHeight);
+onMounted(applyHeight);
 </script>
 
 <template>
@@ -58,12 +71,18 @@ function toggleCollapse() {
     <div
       class="mission-card-tabs"
       :class="{ 'mission-card-tabs--collapsed': collapsed }"
+      :style="{ maxHeight: contentHeight }"
     >
-      <PageChip
-        v-for="tab in tabs"
-        :key="tab.id"
-        :tab="tab"
-      />
+      <div
+        ref="contentEl"
+        class="mission-card-tabs-inner"
+      >
+        <PageChip
+          v-for="tab in tabs"
+          :key="tab.id"
+          :tab="tab"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -144,15 +163,18 @@ function toggleCollapse() {
   display:        flex;
   overflow:       hidden;
   flex-direction: column;
-  max-height:     2000px;
+  max-height:     0;
   transition:     max-height var(--transition-base), opacity var(--transition-base), transform var(--transition-base);
   transform:      translateY(0);
   opacity:        1;
 
   &--collapsed {
-    max-height: 0;
     transform:  translateY(-8px);
     opacity:    0;
   }
+}
+
+.mission-card-tabs-inner {
+  flex-shrink: 0;
 }
 </style>
