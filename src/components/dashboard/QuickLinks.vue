@@ -156,10 +156,12 @@ function openLink(url: string) {
 }
 
 .quick-links-title {
-  font-size:     0.875rem;
-  margin-bottom: var(--space-3);
-  text-align:    left;
-  color:         var(--theme-c-text-muted);
+  font-size:      0.875rem;
+  font-weight:    500;
+  margin-bottom:  var(--space-3);
+  text-align:     left;
+  letter-spacing: 0.025em;
+  color:          var(--md-sys-color-on-surface-variant);
 }
 
 .links-grid {

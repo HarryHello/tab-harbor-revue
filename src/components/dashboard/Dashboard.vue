@@ -37,7 +37,7 @@ const searchQuery = ref('');
 
     .dashboard-header {
       position:    sticky;
-      top:         calc(60px + var(--space-6)); /* GroupNav height + spacing */
+      top:         calc(64px + var(--space-6)); /* GroupNav height + spacing */
       flex-shrink: 0;
       width:       50%;
     }

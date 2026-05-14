@@ -85,7 +85,7 @@ const groups = computed(() => {
   justify-content: center;
   padding:         var(--space-16) var(--space-8);
   text-align:      center;
-  color:           var(--theme-c-text-muted);
+  color:           var(--md-sys-color-on-surface-variant);
 }
 
 .empty-state svg {
@@ -98,6 +98,7 @@ const groups = computed(() => {
 .empty-state h3 {
   font-family:   var(--font-display);
   font-size:     1.5rem;
+  font-weight:   500;
   margin-bottom: var(--space-2);
   color:         var(--theme-c-text);
 }

@@ -8,6 +8,7 @@ const settingsStore = useSettingsStore()
 const tabCount = ref(0)
 
 onMounted(async () => {
+  settingsStore.loadSettings()
   const tabs = await chrome.tabs.query({})
   tabCount.value = tabs.length
 })
@@ -36,7 +37,7 @@ async function openNewTab() {
 </script>
 
 <template>
-  <div class="popup" @click="openNewTab">
+  <div class="popup" @click="openNewTab" role="button" aria-label="Open Tab Harbor Vue" tabindex="0">
     <div class="logo">
       <img src="/icons/icon128.png" alt="" width="20" height="20">
     </div>

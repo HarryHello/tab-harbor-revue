@@ -89,11 +89,11 @@ function handleOverlayClick(event: MouseEvent) {
   display:         flex;
   align-items:     center;
   justify-content: center;
-  background:      none;
+  background:      rgba(0, 0, 0, 0.4);
   inset:           0;
 
   &--blur {
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(4px);
   }
 }
 
@@ -102,10 +102,10 @@ function handleOverlayClick(event: MouseEvent) {
   width:         90%;
   max-height:    80vh;
   padding:       var(--space-6);
-  border-radius: var(--radius-lg);
-  background:    color-mix(in srgb, var(--theme-c-card-bg-2) 50%, var(--theme-c-page-bg));
-  box-shadow:    var(--shadow-md);
-  will-change:   backdrop-filter, transform, opacity;
+  border-radius: var(--radius-xl);
+  background:    var(--md-sys-color-surface-container-high);
+  box-shadow:    var(--shadow-lg);
+  will-change:   transform, opacity;
 }
 
 .modal-form-header {
@@ -114,12 +114,13 @@ function handleOverlayClick(event: MouseEvent) {
   justify-content: space-between;
   margin-bottom:   var(--space-4);
   padding-bottom:  var(--space-4);
-  border-bottom:   1px solid var(--theme-c-border);
+  border-bottom:   1px solid var(--md-sys-color-outline-variant);
 }
 
 .modal-form-title {
   font-family: var(--font-display);
   font-size:   1.5rem;
+  font-weight: 500;
   margin:      0;
   color:       var(--theme-c-text);
 }
@@ -128,13 +129,13 @@ function handleOverlayClick(event: MouseEvent) {
   display:         flex;
   align-items:     center;
   justify-content: center;
-  width:           32px;
-  height:          32px;
+  width:           40px;
+  height:          40px;
   cursor:          pointer;
   transition:      all var(--transition-fast);
-  color:           var(--theme-c-text-muted);
+  color:           var(--md-sys-color-on-surface-variant);
   border:          none;
-  border-radius:   99px;
+  border-radius:   50%;
   background:      transparent;
 
   &:hover {

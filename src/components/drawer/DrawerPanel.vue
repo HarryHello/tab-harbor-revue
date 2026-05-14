@@ -120,11 +120,9 @@ const indicatorStyle = computed(() => {
     min-height:      400px;
     max-height:      calc(100vh - 48px);
     pointer-events:  auto;
-    border-radius:   var(--radius-lg);
-    //background: color-mix(in srgb, var(--theme-c-card-bg-2), transparent 100%);
-    background:      var(--theme-c-card-bg-2);
+    border-radius:   var(--radius-xl);
+    background:      var(--md-sys-color-surface-container-high);
     box-shadow:      var(--shadow-lg);
-    backdrop-filter: blur(10px);
   }
 
   // 大屏幕：右侧圆角浮窗
@@ -132,7 +130,7 @@ const indicatorStyle = computed(() => {
     align-items:     flex-start;
     justify-content: flex-end;
     // GroupNav + spacing + extra
-    padding:         calc(30px + var(--space-6) + var(--space-6)) var(--space-8) 0 0;
+    padding:         calc(32px + var(--space-6) + var(--space-6)) var(--space-8) 0 0;
 
     .drawer-backdrop {
       display: none;
@@ -153,7 +151,7 @@ const indicatorStyle = computed(() => {
   align-items:     center;
   justify-content: space-between;
   padding:         var(--space-3) var(--space-6);
-  border-bottom:   1px solid var(--theme-c-border);
+  border-bottom:   1px solid var(--md-sys-color-outline-variant);
 }
 
 .drawer-tabs {
@@ -172,9 +170,8 @@ const indicatorStyle = computed(() => {
   width:         32px;
   height:        32px;
   transition:    transform var(--transition-base);
-  //transform: translateY(-50%);
   border-radius: 50%;
-  background:    var(--theme-c-accent);
+  background:    var(--md-sys-color-primary-container);
   box-shadow:    var(--shadow-sm);
 }
 
@@ -188,7 +185,7 @@ const indicatorStyle = computed(() => {
   height:          32px;
   cursor:          pointer;
   transition:      color var(--transition-fast);
-  color:           var(--theme-c-text-muted);
+  color:           var(--md-sys-color-on-surface-variant);
   border:          none;
   border-radius:   50%;
   background:      transparent;
@@ -204,23 +201,25 @@ const indicatorStyle = computed(() => {
 }
 
 .drawer-tab--active {
-  color: white;
+  color: var(--md-sys-color-on-primary-container);
 }
 
 .drawer-close {
   display:         flex;
   align-items:     center;
   justify-content: center;
-  width:           36px;
-  height:          36px;
+  width:           40px;
+  height:          40px;
   transition:      all var(--transition-fast);
-  color:           var(--theme-c-text-muted);
-  border-radius:   9999px;
+  color:           var(--md-sys-color-on-surface-variant);
+  border:          none;
+  border-radius:   50%;
+  background:      transparent;
 }
 
 .drawer-close:hover {
   color:      var(--theme-c-text);
-  background: color-mix(in srgb, var(--theme-c-text-muted), transparent 50%);
+  background: var(--theme-c-active-bg);
 }
 
 .drawer-close svg {

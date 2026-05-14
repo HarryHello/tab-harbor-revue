@@ -3,7 +3,15 @@ import { ref } from 'vue';
 
 export type ThemeId = 'light' | 'dark'
 
-// 主题颜色配置
+// MD3 surface container 色阶映射
+//  elevations in MD3:
+//  level 0: surface
+//  level 1: surface-container-low
+//  level 2: surface-container
+//  level 3: surface-container-high
+//  level 4: surface-container-highest
+
+// 主题颜色配置（MD3 兼容）
 interface ThemeColors {
   '--theme-c-text': string;
   '--theme-c-page-bg': string;
@@ -14,6 +22,17 @@ interface ThemeColors {
   '--theme-c-card-bg': string;
   '--theme-c-card-bg-2': string;
   '--theme-c-active-bg': string;
+  // MD3 extended tokens
+  '--md-sys-color-surface-container-lowest': string;
+  '--md-sys-color-surface-container-low': string;
+  '--md-sys-color-surface-container': string;
+  '--md-sys-color-surface-container-high': string;
+  '--md-sys-color-surface-container-highest': string;
+  '--md-sys-color-primary-container': string;
+  '--md-sys-color-on-primary-container': string;
+  '--md-sys-color-outline': string;
+  '--md-sys-color-outline-variant': string;
+  '--md-sys-color-on-surface-variant': string;
   '--shadow-sm': string;
   '--shadow-md': string;
   '--shadow-lg': string;
@@ -22,32 +41,54 @@ interface ThemeColors {
 // 定义所有主题的配置
 const THEMES: Record<ThemeId, ThemeColors> = {
   light: {
-    '--theme-c-text': '#030303',
+    '--theme-c-text': '#202124',
     '--theme-c-page-bg': '#ffffff',
-    '--theme-c-border': '#f4f4f4',
-    '--theme-c-text-muted': '#8a8a8a',
-    '--theme-c-accent': '#4285f4',
-    '--theme-c-danger': '#a50e0e',
-    '--theme-c-card-bg': '#e8eef6',
-    '--theme-c-card-bg-2': '#d2e3fc',
-    '--theme-c-active-bg': 'rgba(113, 168, 255, 0.6)',
-    '--shadow-sm': '0 1px 2px rgba(26, 22, 19, 0.05)',
-    '--shadow-md': '0 4px 12px rgba(26, 22, 19, 0.08)',
-    '--shadow-lg': '0 8px 24px rgba(26, 22, 19, 0.12)',
-  },
-  dark: {
-    '--theme-c-text': '#f5f5f5',
-    '--theme-c-page-bg': '#202124',
-    '--theme-c-border': '#636363',
-    '--theme-c-text-muted': '#a1a1a1',
+    '--theme-c-border': '#dadce0',
+    '--theme-c-text-muted': '#5f6368',
     '--theme-c-accent': '#4285f4',
     '--theme-c-danger': '#ea4335',
+    '--theme-c-card-bg': '#f1f3f4',
+    '--theme-c-card-bg-2': '#e8f0fe',
+    '--theme-c-active-bg': 'rgba(66, 133, 244, 0.08)',
+    // MD3 extended tokens (light) — Google Blue
+    '--md-sys-color-surface-container-lowest': '#ffffff',
+    '--md-sys-color-surface-container-low': '#f8f9fa',
+    '--md-sys-color-surface-container': '#f1f3f4',
+    '--md-sys-color-surface-container-high': '#e8eaed',
+    '--md-sys-color-surface-container-highest': '#dadce0',
+    '--md-sys-color-primary-container': '#d2e3fc',
+    '--md-sys-color-on-primary-container': '#174ea6',
+    '--md-sys-color-outline': '#5f6368',
+    '--md-sys-color-outline-variant': '#dadce0',
+    '--md-sys-color-on-surface-variant': '#5f6368',
+    '--shadow-sm': '0 1px 3px 1px rgba(0, 0, 0, 0.08), 0 1px 2px 0 rgba(0, 0, 0, 0.04)',
+    '--shadow-md': '0 4px 8px 3px rgba(0, 0, 0, 0.1), 0 1px 3px 0 rgba(0, 0, 0, 0.06)',
+    '--shadow-lg': '0 8px 16px 4px rgba(0, 0, 0, 0.12), 0 2px 4px 0 rgba(0, 0, 0, 0.08)',
+  },
+  dark: {
+    '--theme-c-text': '#e8eaed',
+    '--theme-c-page-bg': '#202124',
+    '--theme-c-border': '#5f6368',
+    '--theme-c-text-muted': '#9aa0a6',
+    '--theme-c-accent': '#8ab4f8',
+    '--theme-c-danger': '#f28b82',
     '--theme-c-card-bg': '#303134',
     '--theme-c-card-bg-2': '#28292a',
-    '--theme-c-active-bg': '#636363',
-    '--shadow-sm': '0 1px 2px rgba(0, 0, 0, 0.2)',
-    '--shadow-md': '0 4px 12px rgba(0, 0, 0, 0.3)',
-    '--shadow-lg': '0 8px 24px rgba(0, 0, 0, 0.4)',
+    '--theme-c-active-bg': 'rgba(138, 180, 248, 0.08)',
+    // MD3 extended tokens (dark) — Google Blue
+    '--md-sys-color-surface-container-lowest': '#0f0f0f',
+    '--md-sys-color-surface-container-low': '#1d1d1d',
+    '--md-sys-color-surface-container': '#28292a',
+    '--md-sys-color-surface-container-high': '#303134',
+    '--md-sys-color-surface-container-highest': '#3c4043',
+    '--md-sys-color-primary-container': '#174ea6',
+    '--md-sys-color-on-primary-container': '#d2e3fc',
+    '--md-sys-color-outline': '#9aa0a6',
+    '--md-sys-color-outline-variant': '#5f6368',
+    '--md-sys-color-on-surface-variant': '#9aa0a6',
+    '--shadow-sm': '0 1px 3px 1px rgba(0, 0, 0, 0.3), 0 1px 2px 0 rgba(0, 0, 0, 0.2)',
+    '--shadow-md': '0 4px 8px 3px rgba(0, 0, 0, 0.35), 0 1px 3px 0 rgba(0, 0, 0, 0.25)',
+    '--shadow-lg': '0 8px 16px 4px rgba(0, 0, 0, 0.4), 0 2px 4px 0 rgba(0, 0, 0, 0.3)',
   },
 };
 

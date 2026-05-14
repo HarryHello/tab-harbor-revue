@@ -1,17 +1,29 @@
 @import "./google_colors.scss";
 
 :root {
-  // 颜色变量
-  --theme-c-text:       #030303;
+  // 颜色变量 (Google Blue light)
+  --theme-c-text:       #202124;
   --theme-c-page-bg:    #ffffff;
-  --theme-c-border:     #f4f4f4;
-  --theme-c-text-muted: #8a8a8a;
+  --theme-c-border:     #dadce0;
+  --theme-c-text-muted: #5f6368;
   --theme-c-accent:     #4285f4;
-  --theme-c-danger:     #a50e0e;
-  --theme-c-card-bg:    #e8eef6;
-  --theme-c-card-bg-2:  #d2e3fc;
-  --theme-c-active-bg:  #f4f4f4;
+  --theme-c-danger:     #ea4335;
+  --theme-c-card-bg:    #f1f3f4;
+  --theme-c-card-bg-2:  #e8f0fe;
+  --theme-c-active-bg:  rgba(66, 133, 244, 0.08);
   --no-color:           rgba(0, 0, 0, 0);
+
+  // MD3 extended tokens (Google Blue)
+  --md-sys-color-surface-container-lowest:  #ffffff;
+  --md-sys-color-surface-container-low:     #f8f9fa;
+  --md-sys-color-surface-container:         #f1f3f4;
+  --md-sys-color-surface-container-high:    #e8eaed;
+  --md-sys-color-surface-container-highest: #dadce0;
+  --md-sys-color-primary-container:         #d2e3fc;
+  --md-sys-color-on-primary-container:      #174ea6;
+  --md-sys-color-outline:                   #5f6368;
+  --md-sys-color-outline-variant:           #dadce0;
+  --md-sys-color-on-surface-variant:        #5f6368;
 
   // 字体
   --font-display:       'Google Sans', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -27,10 +39,11 @@
   --space-12:           48px;
   --space-16:           64px;
 
-  // 圆角
+  // 圆角 (MD3)
   --radius-sm:          8px;
-  --radius-md:          12px;
+  --radius-md:          16px;
   --radius-lg:          16px;
+  --radius-xl:          28px;
   --radius-full:        999px;
 
   // 过渡动画
