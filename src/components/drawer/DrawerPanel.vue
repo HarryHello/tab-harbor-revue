@@ -103,7 +103,7 @@ const indicatorStyle = computed(() => {
     position:        absolute;
     display:         none;
     pointer-events:  auto;
-    background:      rgba(0, 0, 0, 0.3);
+    background:      var(--theme-c-overlay);
     inset:           0;
     backdrop-filter: blur(4px);
   }

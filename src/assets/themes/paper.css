@@ -1,0 +1,54 @@
+/* Paper — 纸色暖调 */
+[data-color-scheme="paper"] {
+  --theme-c-text:       #1a1613;
+  --theme-c-page-bg:    oklch(0.97 0.013 50);
+  --theme-c-border:     oklch(0.88 0.02 50);
+  --theme-c-text-muted: #9a918a;
+  --theme-c-accent:     #8a653f;
+  --theme-c-danger:     #b35a5a;
+  --theme-c-card-bg:    oklch(0.95 0.018 50);
+  --theme-c-card-bg-2:  #f2e7db;
+  --theme-c-overlay:    rgba(0, 0, 0, 0.3);
+
+  --md-sys-color-surface-container-lowest:  oklch(0.99 0.008 50);
+  --md-sys-color-surface-container-low:     oklch(0.975 0.01 50);
+  --md-sys-color-surface-container:         oklch(0.95 0.018 50);
+  --md-sys-color-surface-container-high:    oklch(0.91 0.022 50);
+  --md-sys-color-surface-container-highest: oklch(0.88 0.02 50);
+  --md-sys-color-primary-container:         #f2e7db;
+  --md-sys-color-on-primary-container:      #fffaf5;
+  --md-sys-color-outline:                   #9a918a;
+  --md-sys-color-outline-variant:           oklch(0.88 0.02 50);
+  --md-sys-color-on-surface-variant:        #9a918a;
+
+  --shadow-sm: 0 1px 3px 1px rgba(0, 0, 0, 0.08), 0 1px 2px 0 rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4px 8px 3px rgba(0, 0, 0, 0.1), 0 1px 3px 0 rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 8px 16px 4px rgba(0, 0, 0, 0.12), 0 2px 4px 0 rgba(0, 0, 0, 0.08);
+}
+
+[data-color-scheme="paper"].dark {
+  --theme-c-text:       #e8e2da;
+  --theme-c-page-bg:    #1a1613;
+  --theme-c-border:     #5a4a3a;
+  --theme-c-text-muted: #7a726a;
+  --theme-c-accent:     #a0754f;
+  --theme-c-danger:     #c36a6a;
+  --theme-c-card-bg:    #2d2722;
+  --theme-c-card-bg-2:  #231f1a;
+  --theme-c-overlay:    rgba(0, 0, 0, 0.5);
+
+  --md-sys-color-surface-container-lowest:  #0f0d0b;
+  --md-sys-color-surface-container-low:     #1a1613;
+  --md-sys-color-surface-container:         #2d2722;
+  --md-sys-color-surface-container-high:    #3a322b;
+  --md-sys-color-surface-container-highest: #4a4038;
+  --md-sys-color-primary-container:         #5a4a3a;
+  --md-sys-color-on-primary-container:      #f8f5f0;
+  --md-sys-color-outline:                   #7a726a;
+  --md-sys-color-outline-variant:           #5a4a3a;
+  --md-sys-color-on-surface-variant:        #7a726a;
+
+  --shadow-sm: 0 1px 3px 1px rgba(0, 0, 0, 0.3), 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 4px 8px 3px rgba(0, 0, 0, 0.35), 0 1px 3px 0 rgba(0, 0, 0, 0.25);
+  --shadow-lg: 0 8px 16px 4px rgba(0, 0, 0, 0.4), 0 2px 4px 0 rgba(0, 0, 0, 0.3);
+}

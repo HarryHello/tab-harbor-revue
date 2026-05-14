@@ -1,7 +1,7 @@
 import { useThemeStore } from '@/stores/theme';
 import { useSettingsStore } from '@/stores/settings';
 import { useDeferredStore, useQuickLinksStore, useTodosStore } from '@/stores/items';
-import type { configV1 } from '@/types/config';
+import type { configV1, configV2 } from '@/types/config';
 
 // 获取当前扩展版本（从 manifest.json）
 function getExtensionVersion(): string {
@@ -18,13 +18,14 @@ export async function exportConfigs() {
     const todosStore = useTodosStore();
     const quickLinksStore = useQuickLinksStore();
 
-    // 构建配置对象
-    const config: configV1 = {
+    // 构建配置对象 (v2)
+    const config: configV2 = {
       extensionVersion: getExtensionVersion(),
-      configVersion: 1,
+      configVersion: 2,
       exportedAt: Date.now(),
       theme: {
-        themeId: themeStore.currentTheme,
+        colorScheme: themeStore.colorScheme,
+        colorMode: themeStore.colorMode,
       },
       settings: {
         doShowRgbCircle: settingsStore.settings.doShowRgbCircle,
@@ -103,12 +104,12 @@ export async function importConfigs() {
 
     // 读取文件内容
     const text = await file.text();
-    const config = JSON.parse(text) as configV1;
+    const raw = JSON.parse(text) as configV1 | configV2;
 
-    // 验证配置格式
-    if (!config.configVersion || config.configVersion !== 1) {
-      console.error(`Unsupported config version: ${config.configVersion}`);
-      alert(`❌ Unsupported config version: ${config.configVersion}`);
+    // 验证配置版本
+    if (!raw.configVersion || (raw.configVersion !== 1 && raw.configVersion !== 2)) {
+      console.error(`Unsupported config version: ${raw.configVersion}`);
+      alert(`❌ Unsupported config version: ${raw.configVersion}`);
       return;
     }
 
@@ -116,8 +117,8 @@ export async function importConfigs() {
     const confirmed = confirm(
       `⚠️ Import Configuration\n\n` +
       `This will replace all your current data with the imported configuration.\n\n` +
-      `Extension Version: ${config.extensionVersion}\n` +
-      `Exported At: ${new Date(config.exportedAt).toLocaleString()}\n\n` +
+      `Extension Version: ${raw.extensionVersion}\n` +
+      `Exported At: ${new Date(raw.exportedAt).toLocaleString()}\n\n` +
       `Are you sure you want to continue?`
     );
 
@@ -133,25 +134,33 @@ export async function importConfigs() {
     const todosStore = useTodosStore();
     const quickLinksStore = useQuickLinksStore();
 
-    // 导入主题设置
-    if (config.theme) {
-      themeStore.setTheme(config.theme.themeId);
+    // 导入主题设置 — 兼容 v1 和 v2
+    if (raw.theme) {
+      if (raw.configVersion === 1) {
+        const v1 = raw as configV1;
+        // v1 只有 light/dark，默认配色为 google-blue
+        themeStore.setTheme(v1.theme.themeId);
+      } else {
+        const v2 = raw as configV2;
+        themeStore.setColorScheme(v2.theme.colorScheme);
+        themeStore.setColorMode(v2.theme.colorMode);
+      }
     }
 
     // 导入其他设置
-    if (config.settings) {
-      settingsStore.updateSetting('doShowRgbCircle', config.settings.doShowRgbCircle);
+    if (raw.settings) {
+      settingsStore.updateSetting('doShowRgbCircle', raw.settings.doShowRgbCircle);
     }
 
     // 导入快速链接
-    if (config.quickLinks) {
-      quickLinksStore.links = config.quickLinks;
+    if (raw.quickLinks) {
+      quickLinksStore.links = raw.quickLinks;
       quickLinksStore.save();
     }
 
     // 导入暂存标签页
-    if (config.deferred) {
-      deferredStore.items = config.deferred.map(item => ({
+    if (raw.deferred) {
+      deferredStore.items = raw.deferred.map(item => ({
         id: item.id,
         url: item.url,
         title: item.title,
@@ -164,8 +173,8 @@ export async function importConfigs() {
     }
 
     // 导入待办事项
-    if (config.todos) {
-      todosStore.items = config.todos.map(todo => ({
+    if (raw.todos) {
+      todosStore.items = raw.todos.map(todo => ({
         id: todo.id,
         title: todo.title,
         description: todo.description || '',

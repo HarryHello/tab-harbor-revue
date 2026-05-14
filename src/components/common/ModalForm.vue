@@ -89,7 +89,7 @@ function handleOverlayClick(event: MouseEvent) {
   display:         flex;
   align-items:     center;
   justify-content: center;
-  background:      rgba(0, 0, 0, 0.4);
+  background:      var(--theme-c-overlay);
   inset:           0;
 
   &--blur {
@@ -179,7 +179,7 @@ function handleOverlayClick(event: MouseEvent) {
   }
 
   :deep(.modal-btn--save) {
-    color:      white;
+    color:      var(--md-sys-color-on-primary-container);
     background: var(--theme-c-accent);
 
     &:hover {

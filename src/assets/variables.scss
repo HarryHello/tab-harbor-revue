@@ -1,30 +1,7 @@
 @import "./google_colors.scss";
+@import "./themes/index.css";
 
 :root {
-  // 颜色变量 (Google Blue light)
-  --theme-c-text:       #202124;
-  --theme-c-page-bg:    #ffffff;
-  --theme-c-border:     #dadce0;
-  --theme-c-text-muted: #5f6368;
-  --theme-c-accent:     #4285f4;
-  --theme-c-danger:     #ea4335;
-  --theme-c-card-bg:    #f1f3f4;
-  --theme-c-card-bg-2:  #e8f0fe;
-  --theme-c-active-bg:  rgba(66, 133, 244, 0.08);
-  --no-color:           rgba(0, 0, 0, 0);
-
-  // MD3 extended tokens (Google Blue)
-  --md-sys-color-surface-container-lowest:  #ffffff;
-  --md-sys-color-surface-container-low:     #f8f9fa;
-  --md-sys-color-surface-container:         #f1f3f4;
-  --md-sys-color-surface-container-high:    #e8eaed;
-  --md-sys-color-surface-container-highest: #dadce0;
-  --md-sys-color-primary-container:         #d2e3fc;
-  --md-sys-color-on-primary-container:      #174ea6;
-  --md-sys-color-outline:                   #5f6368;
-  --md-sys-color-outline-variant:           #dadce0;
-  --md-sys-color-on-surface-variant:        #5f6368;
-
   // 字体
   --font-display:       'Google Sans', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-body:          'Public Sans', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -50,4 +27,8 @@
   --transition-fast:    150ms cubic-bezier(0.22, 1, 0.36, 1);
   --transition-base:    250ms cubic-bezier(0.22, 1, 0.36, 1);
   --transition-slow:    500ms cubic-bezier(0.22, 1, 0.36, 1);
+
+  // 动态计算 active-bg（基于当前强调色）
+  --theme-c-active-bg:  color-mix(in srgb, var(--theme-c-accent) 8%, transparent);
+  --no-color:           rgba(0, 0, 0, 0);
 }
