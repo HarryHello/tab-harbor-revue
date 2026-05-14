@@ -26,6 +26,6 @@ const emit = defineEmits<{
 
 .overflow-chips:hover {
   background: var(--theme-c-accent);
-  color: white;
+  color: var(--md-sys-color-on-primary-container);
 }
 </style>

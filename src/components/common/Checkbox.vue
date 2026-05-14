@@ -61,7 +61,7 @@ function toggle() {
 }
 
 .checkbox--checked svg {
-  color: white;
+  color: var(--md-sys-color-on-primary-container);
 }
 
 .checkbox svg {

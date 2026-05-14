@@ -1,0 +1,54 @@
+/* Blush — 薄红陶色 */
+[data-color-scheme="blush"] {
+  --theme-c-text:       #201716;
+  --theme-c-page-bg:    oklch(0.97 0.013 355);
+  --theme-c-border:     oklch(0.88 0.02 355);
+  --theme-c-text-muted: #97827c;
+  --theme-c-accent:     #a5656f;
+  --theme-c-danger:     #ad6966;
+  --theme-c-card-bg:    oklch(0.95 0.018 355);
+  --theme-c-card-bg-2:  #f2dfe1;
+  --theme-c-overlay:    rgba(0, 0, 0, 0.3);
+
+  --md-sys-color-surface-container-lowest:  oklch(0.99 0.008 355);
+  --md-sys-color-surface-container-low:     oklch(0.975 0.01 355);
+  --md-sys-color-surface-container:         oklch(0.95 0.018 355);
+  --md-sys-color-surface-container-high:    oklch(0.91 0.022 355);
+  --md-sys-color-surface-container-highest: oklch(0.87 0.025 355);
+  --md-sys-color-primary-container:         #f2dfe1;
+  --md-sys-color-on-primary-container:      #fff7f8;
+  --md-sys-color-outline:                   #97827c;
+  --md-sys-color-outline-variant:           oklch(0.88 0.02 355);
+  --md-sys-color-on-surface-variant:        #97827c;
+
+  --shadow-sm: 0 1px 3px 1px rgba(0, 0, 0, 0.08), 0 1px 2px 0 rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4px 8px 3px rgba(0, 0, 0, 0.1), 0 1px 3px 0 rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 8px 16px 4px rgba(0, 0, 0, 0.12), 0 2px 4px 0 rgba(0, 0, 0, 0.08);
+}
+
+[data-color-scheme="blush"].dark {
+  --theme-c-text:       #e8e2da;
+  --theme-c-page-bg:    #201716;
+  --theme-c-border:     #5a4a4a;
+  --theme-c-text-muted: #8a7a7a;
+  --theme-c-accent:     #a5656f;
+  --theme-c-danger:     #c37a7a;
+  --theme-c-card-bg:    #332a2a;
+  --theme-c-card-bg-2:  #281f1f;
+  --theme-c-overlay:    rgba(0, 0, 0, 0.5);
+
+  --md-sys-color-surface-container-lowest:  #140f0f;
+  --md-sys-color-surface-container-low:     #201716;
+  --md-sys-color-surface-container:         #332a2a;
+  --md-sys-color-surface-container-high:    #3d3232;
+  --md-sys-color-surface-container-highest: #4a3d3d;
+  --md-sys-color-primary-container:         #5a4a4a;
+  --md-sys-color-on-primary-container:      #f6efec;
+  --md-sys-color-outline:                   #8a7a7a;
+  --md-sys-color-outline-variant:           #5a4a4a;
+  --md-sys-color-on-surface-variant:        #8a7a7a;
+
+  --shadow-sm: 0 1px 3px 1px rgba(0, 0, 0, 0.3), 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 4px 8px 3px rgba(0, 0, 0, 0.35), 0 1px 3px 0 rgba(0, 0, 0, 0.25);
+  --shadow-lg: 0 8px 16px 4px rgba(0, 0, 0, 0.4), 0 2px 4px 0 rgba(0, 0, 0, 0.3);
+}

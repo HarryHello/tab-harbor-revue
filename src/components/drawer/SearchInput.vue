@@ -65,34 +65,33 @@ function handleKeyup(event: KeyboardEvent) {
 .search-input {
   display:       flex;
   align-items:   center;
-  min-height:    44px;
-  padding:       var(--space-3) var(--space-4);
+  min-height:    56px;
+  padding:       var(--space-2) var(--space-4);
   cursor:        text;
   transition:    all var(--transition-fast);
-  border:        1px solid rgba(0, 0, 0, 0);
+  border:        1px solid transparent;
   border-radius: 9999px;
-  background:    var(--theme-c-card-bg);
-  gap:           var(--space-2);
+  background:    var(--md-sys-color-surface-container-highest);
+  gap:           var(--space-3);
 
   &:hover {
-    border-color: var(--theme-c-accent);
+    border-color: var(--md-sys-color-on-primary-container);
   }
 }
 
 .search-input--focused {
-  border-color: var(--theme-c-accent);
+  border-color: var(--md-sys-color-on-primary-container);
   border-width: 2px;
-  transform: scale(1.02);
 }
 
 .search-icon {
-  width:  18px;
-  height: 18px;
-  color:  var(--theme-c-text-muted);
+  width:  20px;
+  height: 20px;
+  color:  var(--md-sys-color-on-surface-variant);
 }
 
 .search-field {
-  font-size:   0.9375rem;
+  font-size:   1rem;
   line-height: 1.5;
   flex:        1;
   min-height:  24px;
@@ -103,20 +102,22 @@ function handleKeyup(event: KeyboardEvent) {
 }
 
 .search-field::placeholder {
-  font-size:   0.9375rem;
+  font-size:   1rem;
   line-height: 1.5;
-  color:       var(--theme-c-text-muted);
+  color:       var(--md-sys-color-on-surface-variant);
 }
 
 .search-clear {
   display:         flex;
   align-items:     center;
   justify-content: center;
-  width:           24px;
-  height:          24px;
+  width:           40px;
+  height:          40px;
   transition:      all var(--transition-fast);
-  color:           var(--theme-c-text-muted);
+  color:           var(--md-sys-color-on-surface-variant);
+  border:          none;
   border-radius:   50%;
+  background:      transparent;
 }
 
 .search-clear:hover {
@@ -125,7 +126,7 @@ function handleKeyup(event: KeyboardEvent) {
 }
 
 .search-clear svg {
-  width:  14px;
-  height: 14px;
+  width:  18px;
+  height: 18px;
 }
 </style>
