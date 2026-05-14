@@ -117,3 +117,29 @@ export function handleUrlSecurityCheck(url: string, actionType: 'open' | 'add' =
   console.warn(`User forced ${validation.protocol} URL:`, url);
   return true;
 }
+
+/**
+ * 将 Chrome Storage 返回的数据转换为数组
+ * Chrome Storage API 有时会将数组存储为对象（key 为索引）
+ * @param data 从 storage 获取的数据
+ * @returns 转换后的数组
+ */
+export function ensureArray<T>(data: any): T[] {
+  if (!data) {
+    return [];
+  }
+  
+  // 如果已经是数组，直接返回
+  if (Array.isArray(data)) {
+    return data as T[];
+  }
+  
+  // 如果是对象（索引键），转换为数组
+  if (typeof data === 'object') {
+    console.log('Converting object to array (Chrome Storage compatibility)');
+    return Object.values(data) as T[];
+  }
+  
+  // 其他类型，返回空数组
+  return [];
+}

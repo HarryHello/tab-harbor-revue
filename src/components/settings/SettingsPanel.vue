@@ -91,12 +91,28 @@ const handleImportConfigs = () => {
       </section>
       <section class="settings-section settings-section--switchers">
         <h3 class="section-title">Others</h3>
-        <div class="switcher-with-label settings-show-ring">
-          <Switch
-            :model-value="settingsStore.settings.doShowRgbCircle"
-            @update:model-value="settingsStore.updateSetting('doShowRgbCircle', $event)"
-          />
-          <label class="switcher-label">RGB Ring</label>
+        <div class="switcher-wrapper">
+          <div class="switcher-with-label settings-show-ring">
+            <Switch
+              :model-value="settingsStore.settings.doShowRgbCircle"
+              @update:model-value="settingsStore.updateSetting('doShowRgbCircle', $event)"
+            />
+            <label class="switcher-label">RGB Ring</label>
+          </div>
+          <div class="switcher-with-label settings-use-sync">
+            <Switch
+              :model-value="settingsStore.settings.doUseSync"
+              @update:model-value="settingsStore.updateSetting('doUseSync', $event)"
+            />
+            <label class="switcher-label">Use Sync</label>
+          </div>
+          <div v-if="settingsStore.settings.doUseSync" class="switcher-with-label settings-sync-todos">
+            <Switch
+              :model-value="settingsStore.settings.doSyncTodos"
+              @update:model-value="settingsStore.updateSetting('doSyncTodos', $event)"
+            />
+            <label class="switcher-label">Sync Todos</label>
+          </div>
         </div>
       </section>
       <section class="settings-section settings-section--configs">
@@ -182,6 +198,12 @@ const handleImportConfigs = () => {
   height:        20px;
   border:        1px solid var(--theme-c-border);
   border-radius: 50%;
+}
+
+.switcher-wrapper {
+  display:               grid;
+  grid-template-columns: 1fr 1fr;
+  gap:                   var(--space-2);
 }
 
 .switcher-with-label {
