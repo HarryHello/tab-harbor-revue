@@ -1,3 +1,5 @@
+/// <reference types="chrome" />
+
 chrome.runtime.onInstalled.addListener(() => {
   console.log('Tab Harbor extension installed')
 })

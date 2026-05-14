@@ -2,9 +2,9 @@
   setup
   lang="ts"
 >
-import { computed } from 'vue';
-import { useTabsStore } from '@/stores';
 import { GridIcon } from '@/components/icons';
+import { useTabsStore } from '@/stores';
+import { computed } from 'vue';
 
 const tabsStore = useTabsStore();
 

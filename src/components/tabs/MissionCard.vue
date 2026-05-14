@@ -2,9 +2,10 @@
   setup
   lang="ts"
 >
-import { computed } from 'vue';
 import type { GroupedTabs } from '@/types';
+import { computed } from 'vue';
 import PageChip from './PageChip.vue';
+import { GlobeIcon } from '@/components/icons';
 
 const props = defineProps<{
   group: GroupedTabs
@@ -12,7 +13,6 @@ const props = defineProps<{
 
 const tabs = computed(() => props.group.tabs);
 
-// 移除 www. 前缀用于显示
 const displayDomain = computed(() => {
   return props.group.domain.replace(/^www\./, '');
 });
@@ -31,6 +31,7 @@ const displayDomain = computed(() => {
           class="mission-card-favicon"
           alt=""
         />
+        <GlobeIcon v-else class="mission-card-favicon" />
         <span class="mission-card-domain">{{ displayDomain }}</span>
       </div>
     </div>

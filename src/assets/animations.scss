@@ -50,3 +50,20 @@
     transition-duration: 0.01ms !important;
   }
 }
+
+
+@keyframes group-highlight-fade {
+  0% {
+    box-shadow: 0 0 0 3px var(--theme-c-accent);
+  }
+  30% {
+    box-shadow: 0 0 0 3px var(--theme-c-accent);
+  }
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+  }
+}
+
+.group-highlight {
+  animation: group-highlight-fade 2s ease-out;
+}

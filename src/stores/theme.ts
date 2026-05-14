@@ -30,7 +30,7 @@ const THEMES: Record<ThemeId, ThemeColors> = {
     '--theme-c-danger': '#a50e0e',
     '--theme-c-card-bg': '#e8eef6',
     '--theme-c-card-bg-2': '#d2e3fc',
-    '--theme-c-active-bg': '#f4f4f4',
+    '--theme-c-active-bg': 'rgba(113, 168, 255, 0.6)',
     '--shadow-sm': '0 1px 2px rgba(26, 22, 19, 0.05)',
     '--shadow-md': '0 4px 12px rgba(26, 22, 19, 0.08)',
     '--shadow-lg': '0 8px 24px rgba(26, 22, 19, 0.12)',

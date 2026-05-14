@@ -2,6 +2,7 @@
   setup
   lang="ts"
 >
+import MoreIcon from '@/components/icons/MoreIcon.vue';
 const props = withDefaults(defineProps<{
   hide_title?: boolean,
   is_add?: boolean,
@@ -119,6 +120,7 @@ function handleClickIcon() {
   svg {
     width:  14px;
     height: 14px;
+    transform: rotate(90deg);
   }
 
   &:hover {

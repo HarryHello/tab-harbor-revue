@@ -2,12 +2,12 @@
   setup
   lang="ts"
 >
-import { computed, ref } from 'vue';
-import { useDeferredStore, useTabsStore, useTodosStore } from '@/stores';
-import SettingsPanel from '@/components/settings/SettingsPanel.vue';
 import DrawerPanel from '@/components/drawer/DrawerPanel.vue';
-import { getFaviconUrl, getInitial, getRandomColor } from '@/utils/helpers';
 import { BookmarkIcon, CheckmarkIcon, SettingsIcon } from '@/components/icons';
+import SettingsPanel from '@/components/settings/SettingsPanel.vue';
+import { useDeferredStore, useTabsStore, useTodosStore } from '@/stores';
+import { getFaviconUrl, getInitial, getRandomColor } from '@/utils/helpers';
+import { computed, ref } from 'vue';
 
 const tabsStore = useTabsStore();
 const deferredStore = useDeferredStore();
@@ -37,10 +37,18 @@ function handleImageError(domain: string) {
   imageErrors.value[domain] = true;
 }
 
+let highlightTimer: ReturnType<typeof setTimeout> | null = null;
+
 function scrollToGroup(domain: string) {
   const el = document.getElementById(`group-${domain}`);
   if (el) {
     el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    el.classList.add('group-highlight');
+    if (highlightTimer) clearTimeout(highlightTimer);
+    highlightTimer = setTimeout(() => {
+      el.classList.remove('group-highlight');
+      highlightTimer = null;
+    }, 2000);
   }
 }
 
@@ -151,7 +159,7 @@ function closeDrawer() {
   align-items:     center;
   justify-content: space-between;
   height:          60px;
-  padding:         0 var(--space-6);
+  padding:         0 var(--space-16);
   border-bottom:   1px solid var(--theme-c-border);
   background:      var(--theme-c-page-bg);
 }
@@ -186,7 +194,6 @@ function closeDrawer() {
 
 .group-nav-item:hover {
   background: var(--theme-c-border);
-  //transform: translateY(-2px);
   box-shadow: var(--shadow-sm);
 }
 

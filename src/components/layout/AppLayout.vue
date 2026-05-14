@@ -2,8 +2,8 @@
   setup
   lang="ts"
 >
-import GroupNav from './GroupNav.vue';
 import Footer from './Footer.vue';
+import GroupNav from './GroupNav.vue';
 </script>
 
 <template>
@@ -26,6 +26,8 @@ import Footer from './Footer.vue';
   display:        flex;
   flex-direction: column;
   min-height:     100vh;
+  padding:        0 80px;
+  margin:         0 auto;
 }
 
 .app-main {

@@ -2,8 +2,8 @@
   setup
   lang="ts"
 >
+import { ClearIcon, SearchIcon } from '@/components/icons';
 import { ref } from 'vue';
-import { SearchIcon, ClearIcon } from '@/components/icons';
 
 const props = defineProps<{
   placeholder?: string
@@ -81,6 +81,8 @@ function handleKeyup(event: KeyboardEvent) {
 
 .search-input--focused {
   border-color: var(--theme-c-accent);
+  border-width: 2px;
+  transform: scale(1.02);
 }
 
 .search-icon {

@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import type { Tab } from '@/types';
+import { BookmarkIcon, CloseIcon, GlobeIcon } from '@/components/icons';
 import { useDeferredStore, useTabsStore } from '@/stores';
-import { BookmarkIcon, CloseIcon } from '@/components/icons';
+import type { Tab } from '@/types';
+import { ref } from 'vue';
 
 const props = defineProps<{
   tab: Tab
@@ -19,16 +19,13 @@ async function focus() {
 
 async function close(e?: Event) {
   e?.stopPropagation();
-  await tabsStore.closeTab(props.tab.id);
+  await tabsStore.closeTab(props.tab.id)
 }
 
 async function save(e?: Event) {
   e?.stopPropagation();
-  console.log('Saving tab:', props.tab.title, props.tab.url);
-  const item = await deferredStore.add(props.tab.url, props.tab.title);
-  console.log('Saved item:', item);
-  console.log('Current items:', deferredStore.items);
-  await tabsStore.closeTab(props.tab.id);
+  await deferredStore.add(props.tab.url, props.tab.title);
+  await tabsStore.closeTab(props.tab.id)
 }
 </script>
 
@@ -46,6 +43,7 @@ async function save(e?: Event) {
       class="page-chip-favicon"
       alt=""
     />
+    <GlobeIcon v-else class="page-chip-favicon" />
     <span class="page-chip-title">{{ tab.title || 'Untitled' }}</span>
     <div class="page-chip-actions" :class="{ 'page-chip-actions--visible': showActions }">
       <button class="page-chip-action" title="Save for later" @click="save">
@@ -70,8 +68,8 @@ async function save(e?: Event) {
   border:      none;
   background:  transparent;
   gap:         var(--space-3);
+  border-radius: var(--radius-md);
 
-  // 标签页之间的间隔线
   &::before {
     position:   absolute;
     top:        0;
