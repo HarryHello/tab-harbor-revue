@@ -6,7 +6,7 @@ import ModalForm from '@/components/common/ModalForm.vue';
 import Switch from '@/components/common/Switch.vue';
 import { MoonIcon, SunIcon } from '@/components/icons';
 import { useSettingsStore } from '@/stores/settings';
-import { useThemeStore, type ColorScheme, COLOR_SCHEMES } from '@/stores/theme';
+import { useThemeStore, type ColorScheme, type ColorMode } from '@/stores/theme';
 import { exportConfigs, importConfigs } from '@/utils/configs';
 import { computed } from 'vue';
 
@@ -37,8 +37,6 @@ const colorSchemes: { id: ColorScheme; name: string; color: string }[] = [
 function selectScheme(scheme: ColorScheme) {
   themeStore.setColorScheme(scheme);
 }
-
-import type { ColorMode } from '@/stores/theme';
 
 function selectMode(mode: ColorMode) {
   themeStore.setColorMode(mode);

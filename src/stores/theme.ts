@@ -48,15 +48,16 @@ export const useThemeStore = defineStore('theme', () => {
 
   function startSystemListener() {
     stopSystemListener();
-    mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    systemDark.value = mediaQuery.matches;
+    const mq = window.matchMedia('(prefers-color-scheme: dark)');
+    systemDark.value = mq.matches;
     mediaHandler = () => {
-      systemDark.value = mediaQuery!.matches;
+      systemDark.value = mq.matches;
       if (colorMode.value === 'auto') {
         applyTheme(colorScheme.value, appliedMode.value);
       }
     };
-    mediaQuery.addEventListener('change', mediaHandler);
+    mq.addEventListener('change', mediaHandler);
+    mediaQuery = mq;
   }
 
   function stopSystemListener() {
