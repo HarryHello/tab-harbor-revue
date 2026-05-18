@@ -1,110 +1,142 @@
 import { defineStore } from 'pinia';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 
-export type ThemeId = 'light' | 'dark'
+export type ColorScheme = 'google-blue' | 'forest-green' | 'paper' | 'sage' | 'mist' | 'blush';
+export type ColorMode = 'light' | 'dark' | 'auto';
 
-// 主题颜色配置
-interface ThemeColors {
-  '--theme-c-text': string;
-  '--theme-c-page-bg': string;
-  '--theme-c-border': string;
-  '--theme-c-text-muted': string;
-  '--theme-c-accent': string;
-  '--theme-c-danger': string;
-  '--theme-c-card-bg': string;
-  '--theme-c-card-bg-2': string;
-  '--theme-c-active-bg': string;
-  '--shadow-sm': string;
-  '--shadow-md': string;
-  '--shadow-lg': string;
-}
+export const COLOR_SCHEMES: ColorScheme[] = [
+  'google-blue',
+  'forest-green',
+  'paper',
+  'sage',
+  'mist',
+  'blush',
+];
 
-// 定义所有主题的配置
-const THEMES: Record<ThemeId, ThemeColors> = {
-  light: {
-    '--theme-c-text': '#030303',
-    '--theme-c-page-bg': '#ffffff',
-    '--theme-c-border': '#f4f4f4',
-    '--theme-c-text-muted': '#8a8a8a',
-    '--theme-c-accent': '#4285f4',
-    '--theme-c-danger': '#a50e0e',
-    '--theme-c-card-bg': '#e8eef6',
-    '--theme-c-card-bg-2': '#d2e3fc',
-    '--theme-c-active-bg': 'rgba(113, 168, 255, 0.6)',
-    '--shadow-sm': '0 1px 2px rgba(26, 22, 19, 0.05)',
-    '--shadow-md': '0 4px 12px rgba(26, 22, 19, 0.08)',
-    '--shadow-lg': '0 8px 24px rgba(26, 22, 19, 0.12)',
-  },
-  dark: {
-    '--theme-c-text': '#f5f5f5',
-    '--theme-c-page-bg': '#202124',
-    '--theme-c-border': '#636363',
-    '--theme-c-text-muted': '#a1a1a1',
-    '--theme-c-accent': '#4285f4',
-    '--theme-c-danger': '#ea4335',
-    '--theme-c-card-bg': '#303134',
-    '--theme-c-card-bg-2': '#28292a',
-    '--theme-c-active-bg': '#636363',
-    '--shadow-sm': '0 1px 2px rgba(0, 0, 0, 0.2)',
-    '--shadow-md': '0 4px 12px rgba(0, 0, 0, 0.3)',
-    '--shadow-lg': '0 8px 24px rgba(0, 0, 0, 0.4)',
-  },
-};
+const STORAGE_KEY_SCHEME = 'theme-color-scheme';
+const STORAGE_KEY_MODE = 'theme-color-mode';
+const LEGACY_STORAGE_KEY = 'theme';
 
 export const useThemeStore = defineStore('theme', () => {
-  const currentTheme = ref<ThemeId>('light');
+  const colorScheme = ref<ColorScheme>('google-blue');
+  const colorMode = ref<ColorMode>('light');
+  const systemDark = ref(false);
 
-  // 应用主题到 DOM
-  function applyTheme(themeId: ThemeId) {
-    const root = document.documentElement;
-    const colors = THEMES[themeId];
+  let mediaQuery: MediaQueryList | null = null;
+  let mediaHandler: (() => void) | null = null;
 
-    if (!colors) {
-      console.warn(`Theme "${themeId}" not found, falling back to light theme`);
-      return applyTheme('light');
+  const appliedMode = computed<'light' | 'dark'>(() => {
+    if (colorMode.value === 'auto') {
+      return systemDark.value ? 'dark' : 'light';
     }
+    return colorMode.value;
+  });
 
-    // 批量设置 CSS 变量
-    Object.entries(colors).forEach(([property, value]) => {
-      root.style.setProperty(property, value);
-    });
+  const currentTheme = computed(() =>
+    `${colorScheme.value}--${appliedMode.value}`
+  );
+
+  function applyTheme(scheme: ColorScheme, mode: 'light' | 'dark') {
+    const root = document.documentElement;
+    root.setAttribute('data-color-scheme', scheme);
+    root.classList.toggle('dark', mode === 'dark');
   }
 
-  // 设置主题并保存
-  function setTheme(themeId: ThemeId) {
-    if (!THEMES[themeId]) {
-      console.warn(`Theme "${themeId}" is not available`);
+  function applyStoredTheme() {
+    applyTheme(colorScheme.value, appliedMode.value);
+  }
+
+  function startSystemListener() {
+    stopSystemListener();
+    const mq = window.matchMedia('(prefers-color-scheme: dark)');
+    systemDark.value = mq.matches;
+    mediaHandler = () => {
+      systemDark.value = mq.matches;
+      if (colorMode.value === 'auto') {
+        applyTheme(colorScheme.value, appliedMode.value);
+      }
+    };
+    mq.addEventListener('change', mediaHandler);
+    mediaQuery = mq;
+  }
+
+  function stopSystemListener() {
+    if (mediaQuery && mediaHandler) {
+      mediaQuery.removeEventListener('change', mediaHandler);
+    }
+    mediaQuery = null;
+    mediaHandler = null;
+  }
+
+  function setColorScheme(scheme: ColorScheme) {
+    if (!COLOR_SCHEMES.includes(scheme)) {
+      console.warn(`Color scheme "${scheme}" is not available`);
       return;
     }
-
-    currentTheme.value = themeId;
-    applyTheme(themeId);
-    localStorage.setItem('theme', themeId);
+    colorScheme.value = scheme;
+    applyStoredTheme();
+    localStorage.setItem(STORAGE_KEY_SCHEME, scheme);
   }
 
-  // 从 localStorage 加载主题，如果没有则根据系统偏好设置
-  function loadTheme() {
-    const savedTheme = localStorage.getItem('theme') as ThemeId;
-
-    if (savedTheme && THEMES[savedTheme]) {
-      // 有保存的主题，直接使用
-      currentTheme.value = savedTheme;
-      applyTheme(savedTheme);
+  function setColorMode(mode: ColorMode) {
+    colorMode.value = mode;
+    if (mode === 'auto') {
+      startSystemListener();
     } else {
-      // 首次使用，根据系统偏好设置
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      const defaultTheme: ThemeId = prefersDark ? 'dark' : 'light';
+      stopSystemListener();
+    }
+    applyStoredTheme();
+    localStorage.setItem(STORAGE_KEY_MODE, mode);
+  }
 
-      currentTheme.value = defaultTheme;
-      applyTheme(defaultTheme);
+  function toggleColorMode() {
+    if (colorMode.value === 'light') setColorMode('dark');
+    else if (colorMode.value === 'dark') setColorMode('auto');
+    else setColorMode('light');
+  }
+
+ // 兼容旧版 localStorage 单 key 'theme'
+  function setTheme(themeId: string) {
+    if (themeId === 'light' || themeId === 'dark') {
+      setColorMode(themeId);
     }
   }
 
-  // 在 store 初始化时立即加载主题
+  function loadTheme() {
+    const savedScheme = localStorage.getItem(STORAGE_KEY_SCHEME) as ColorScheme | null;
+    const savedMode = localStorage.getItem(STORAGE_KEY_MODE) as ColorMode | null;
+
+    if (savedScheme && COLOR_SCHEMES.includes(savedScheme)) {
+      colorScheme.value = savedScheme;
+    }
+
+    if (savedMode === 'light' || savedMode === 'dark' || savedMode === 'auto') {
+      colorMode.value = savedMode;
+    } else {
+      const legacy = localStorage.getItem(LEGACY_STORAGE_KEY) as ColorMode | null;
+      if (legacy === 'light' || legacy === 'dark') {
+        colorMode.value = legacy;
+      } else {
+        colorMode.value = 'auto';
+      }
+    }
+
+    if (colorMode.value === 'auto') {
+      startSystemListener();
+    }
+    applyStoredTheme();
+  }
+
   loadTheme();
 
   return {
+    colorScheme,
+    colorMode,
+    appliedMode,
     currentTheme,
+    setColorScheme,
+    setColorMode,
+    toggleColorMode,
     setTheme,
     loadTheme,
   };

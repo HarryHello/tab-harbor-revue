@@ -4,6 +4,7 @@ export interface Tab {
   title: string
   windowId: number
   active: boolean
+  discarded: boolean
   favIconUrl: string
   isTabOut: boolean
 }

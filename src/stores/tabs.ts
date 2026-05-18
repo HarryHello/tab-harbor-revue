@@ -56,6 +56,12 @@ export const useTabsStore = defineStore('tabs', () => {
     tabs.value.filter(t => !t.isTabOut).length
   )
 
+  const newTabUrl = chrome.runtime.getURL('index.html')
+
+  function isExcludedTabUrl(url: string): boolean {
+    return url === 'chrome://newtab/' || url === '' || url === newTabUrl
+  }
+
   async function fetchTabs() {
     isLoading.value = true
     try {
@@ -66,9 +72,10 @@ export const useTabsStore = defineStore('tabs', () => {
         title: tab.title || 'Untitled',
         windowId: tab.windowId,
         active: tab.active || false,
+        discarded: tab.discarded || false,
         favIconUrl: tab.favIconUrl || '',
         isTabOut: false,
-      })).filter(tab => tab.url !== 'chrome://newtab/' && tab.url !== '' && tab.url !== undefined)
+      })).filter(tab => !isExcludedTabUrl(tab.url))
     } catch (error) {
       console.error('Failed to fetch tabs:', error)
     } finally {
@@ -86,20 +93,12 @@ export const useTabsStore = defineStore('tabs', () => {
   }
 
   async function closeDuplicateNewTabs() {
-    const newTabUrl = chrome.runtime.getURL('index.html')
     const allTabs = await chrome.tabs.query({})
 
     // 筛选出空白新标签页（Ctrl+T 打开的 chrome://newtab/ 或扩展的 index.html）
     const blankTabs = allTabs.filter(
-      tab =>
-        tab.url === 'chrome://newtab/' ||
-        tab.url === newTabUrl ||
-        tab.url === '' ||
-        (tab.status === 'loading' && !tab.url),
+      tab => isExcludedTabUrl(tab.url || ''),
     )
-
-    console.log('Blank tabs found:', blankTabs)
-    console.log('New tab:', newTabUrl)
 
     if (blankTabs.length <= 1) return
 
@@ -122,9 +121,18 @@ export const useTabsStore = defineStore('tabs', () => {
     }
   }
 
+  async function discardTab(tabId: number) {
+    try {
+      await chrome.tabs.discard(tabId)
+    } catch (error) {
+      console.error('Failed to discard tab:', error)
+    }
+  }
+
   // 处理标签页创建
   function handleTabCreated(tab: chrome.tabs.Tab) {
     if (!tab.id) return
+    if (isExcludedTabUrl(tab.url || '')) return
     
     const newTab: Tab = {
       id: tab.id,
@@ -132,6 +140,7 @@ export const useTabsStore = defineStore('tabs', () => {
       title: tab.title || 'Untitled',
       windowId: tab.windowId,
       active: tab.active || false,
+      discarded: tab.discarded || false,
       favIconUrl: tab.favIconUrl || '',
       isTabOut: false,
     }
@@ -146,15 +155,46 @@ export const useTabsStore = defineStore('tabs', () => {
 
   // 处理标签页更新（URL、标题等变化）
   function handleTabUpdated(tabId: number, _changeInfo: any, tab: chrome.tabs.Tab) {
+    if (isExcludedTabUrl(tab.url || '')) {
+      tabs.value = tabs.value.filter(t => t.id !== tabId)
+      return
+    }
     const index = tabs.value.findIndex(t => t.id === tabId)
-    if (index === -1) return
-    
+    if (index === -1) {
+      // discard() 会改变标签页 ID，通过 URL+windowId 查找旧条目替换
+      const staleIndex = tabs.value.findIndex(t => t.url === (tab.url || '') && t.windowId === tab.windowId)
+      if (staleIndex !== -1) {
+        tabs.value[staleIndex] = {
+          ...tabs.value[staleIndex],
+          id: tabId,
+          url: tab.url || tabs.value[staleIndex].url,
+          title: tab.title || tabs.value[staleIndex].title,
+          favIconUrl: tab.favIconUrl || tabs.value[staleIndex].favIconUrl,
+          active: tab.active || false,
+          discarded: tab.discarded || false,
+        }
+        return
+      }
+      tabs.value.push({
+        id: tabId,
+        url: tab.url || '',
+        title: tab.title || 'Untitled',
+        windowId: tab.windowId,
+        active: tab.active || false,
+        discarded: tab.discarded || false,
+        favIconUrl: tab.favIconUrl || '',
+        isTabOut: false,
+      })
+      return
+    }
+
     tabs.value[index] = {
       ...tabs.value[index],
       url: tab.url || tabs.value[index].url,
       title: tab.title || tabs.value[index].title,
       favIconUrl: tab.favIconUrl || tabs.value[index].favIconUrl,
       active: tab.active || false,
+      discarded: tab.discarded || false,
     }
   }
 
@@ -198,6 +238,7 @@ export const useTabsStore = defineStore('tabs', () => {
     fetchTabs,
     closeTab,
     focusTab,
+    discardTab,
     closeDuplicateNewTabs,
     startListening,
     stopListening,

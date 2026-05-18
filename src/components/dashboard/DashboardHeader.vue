@@ -2,13 +2,13 @@
   setup
   lang="ts"
 >
-import { computed, ref } from 'vue';
-import SearchInput from '@/components/drawer/SearchInput.vue';
-import QuickLinks from './QuickLinks.vue';
 import RGBCircle from '@/components/common/RGBCircle.vue';
+import SearchInput from '@/components/drawer/SearchInput.vue';
 import { ChevronIcon } from '@/components/icons';
 import { useSettingsStore } from '@/stores/settings';
 import { handleUrlSecurityCheck } from '@/utils/helpers';
+import { computed, ref } from 'vue';
+import QuickLinks from './QuickLinks.vue';
 
 const props = defineProps<{
   searchQuery: string
@@ -37,13 +37,11 @@ const greetingSub = computed(() => {
 function handleSearchSubmit(event: Event) {
   event.preventDefault();
   if (props.searchQuery.trim()) {
-    // 使用浏览器默认搜索引擎
-    const query = encodeURIComponent(props.searchQuery);
-    // 尝试使用 chrome.search API（如果是扩展环境）
+    // 用用户默认搜索引擎在新标签页打开
     if (typeof chrome !== 'undefined' && chrome.search) {
-      chrome.search.query({ text: props.searchQuery });
+      chrome.search.query({ text: props.searchQuery, disposition: 'NEW_TAB' });
     } else {
-      // 回退方案：在新标签页打开搜索结果
+      const query = encodeURIComponent(props.searchQuery);
       window.open(`https://www.google.com/search?q=${query}`, '_blank');
     }
     emit('update:searchQuery', '');
@@ -89,7 +87,10 @@ const settingsStore = useSettingsStore();
       </p>
       <p class="greeting-sub">{{ greetingSub }}</p>
     </div>
-    <form @submit="handleSearchSubmit">
+    <form
+      class="search-form"
+      @submit="handleSearchSubmit"
+    >
       <SearchInput
         :model-value="searchQuery"
         placeholder="Search the web..."
@@ -143,22 +144,23 @@ const settingsStore = useSettingsStore();
 .dashboard-greeting {
   display:        flex;
   flex-direction: column;
-  margin-bottom:  1rem;
-  gap:            var(--space-1);
+  margin-bottom:  var(--space-6);
+  gap:            var(--space-2);
 }
 
 .greeting-text {
   font-family:    var(--font-display);
   font-size:      2.5rem;
-  font-weight:    600;
+  font-weight:    500;
+  line-height:    1.2;
   letter-spacing: -0.02em;
   color:          var(--theme-c-text);
 }
 
 .greeting-sub {
   font-family: var(--font-display);
-  font-size:   1.5rem;
-  color:       var(--theme-c-text-muted);
+  font-size:   1.25rem;
+  color:       var(--md-sys-color-on-surface-variant);
 }
 
 .quick-links-wrapper {
@@ -166,14 +168,14 @@ const settingsStore = useSettingsStore();
 }
 
 .quick-links-header {
-  display:      flex;
-  align-items:  center;
-  margin-top:   1rem;
-  padding-left: 1rem;
-  cursor:       pointer;
-  user-select:  none;
-  transition:   opacity var(--transition-fast);
-  gap:          var(--space-2);
+  display:     flex;
+  align-items: center;
+  max-width:   560px;
+  margin:      var(--space-6) auto 0;
+  cursor:      pointer;
+  user-select: none;
+  transition:  opacity var(--transition-fast);
+  gap:         var(--space-2);
 
   &:hover {
     opacity: 0.7;
@@ -181,29 +183,31 @@ const settingsStore = useSettingsStore();
 }
 
 .quick-links-title {
-  font-size:  0.875rem;
-  margin:     0;
-  text-align: left;
-  color:      var(--theme-c-text-muted);
+  font-size:     0.875rem;
+  font-weight:   500;
+  margin:        0;
+  text-align:    left;
+  letter-spacing: 0.025em;
+  color:         var(--md-sys-color-on-surface-variant);
 }
 
 .collapse-toggle-btn {
   display:         flex;
   align-items:     center;
   justify-content: center;
-  width:           28px;
-  height:          28px;
+  width:           32px;
+  height:          32px;
   padding:         0;
   cursor:          pointer;
   transition:      all var(--transition-fast);
-  color:           var(--theme-c-text-muted);
+  color:           var(--md-sys-color-on-surface-variant);
   border:          none;
   border-radius:   50%;
   background:      transparent;
 
   svg {
-    width:  16px;
-    height: 16px;
+    width:  18px;
+    height: 18px;
   }
 
   &:hover {
@@ -214,7 +218,9 @@ const settingsStore = useSettingsStore();
 
 .quick-links-content {
   overflow:   hidden;
+  max-width:  560px;
   max-height: 500px;
+  margin:     0 auto;
   transition: max-height var(--transition-base), opacity var(--transition-base), transform var(--transition-base);
   transform:  translateY(0);
   opacity:    1;
@@ -224,6 +230,12 @@ const settingsStore = useSettingsStore();
     transform:  translateY(-10px);
     opacity:    0;
   }
+}
+
+.search-form {
+  width:     100%;
+  max-width: 560px;
+  margin:    0 auto;
 }
 
 .floating-circle {

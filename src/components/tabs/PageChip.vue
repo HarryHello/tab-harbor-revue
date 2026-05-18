@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { BookmarkIcon, CloseIcon, GlobeIcon } from '@/components/icons';
+import { BookmarkIcon, CloseIcon, GlobeIcon, ZzzIcon } from '@/components/icons';
 import { useDeferredStore, useTabsStore } from '@/stores';
 import type { Tab } from '@/types';
 import { ref } from 'vue';
@@ -27,12 +27,17 @@ async function save(e?: Event) {
   await deferredStore.add(props.tab.url, props.tab.title);
   await tabsStore.closeTab(props.tab.id)
 }
+
+async function discard(e?: Event) {
+  e?.stopPropagation();
+  await tabsStore.discardTab(props.tab.id)
+}
 </script>
 
 <template>
   <div
     class="page-chip"
-    :class="{ 'page-chip--active': tab.active }"
+    :class="{ 'page-chip--active': tab.active, 'page-chip--discarded': tab.discarded }"
     @click="focus"
     @mouseenter="showActions = true"
     @mouseleave="showActions = false"
@@ -49,6 +54,9 @@ async function save(e?: Event) {
       <button class="page-chip-action" title="Save for later" @click="save">
         <BookmarkIcon :size="16" />
       </button>
+      <button v-if="!tab.active" class="page-chip-action" title="Discard" @click="discard">
+        <ZzzIcon :size="16" />
+      </button>
       <button class="page-chip-action page-chip-action--danger" title="Close" @click="close">
         <CloseIcon :size="16" />
       </button>
@@ -58,27 +66,17 @@ async function save(e?: Event) {
 
 <style scoped lang="scss">
 .page-chip {
-  position:    relative;
-  display:     flex;
-  align-items: center;
-  margin:      0 24px;
-  padding:     var(--space-3) var(--space-4);
-  cursor:      pointer;
-  transition:  background-color var(--transition-fast);
-  border:      none;
-  background:  transparent;
-  gap:         var(--space-3);
+  position:      relative;
+  display:       flex;
+  align-items:   center;
+  margin:        0 var(--space-2);
+  padding:       var(--space-3) var(--space-3);
+  cursor:        pointer;
+  transition:    background-color var(--transition-fast);
+  border:        none;
   border-radius: var(--radius-md);
-
-  &::before {
-    position:   absolute;
-    top:        0;
-    right:      0;
-    left:       0;
-    height:     1px;
-    content:    '';
-    background: var(--theme-c-active-bg);
-  }
+  background:    transparent;
+  gap:           var(--space-3);
 }
 
 .page-chip:hover {
@@ -86,9 +84,11 @@ async function save(e?: Event) {
 }
 
 .page-chip--active {
+  background: var(--md-sys-color-primary-container);
+
   .page-chip-title {
     font-weight: 600;
-    color:       var(--theme-c-accent);
+    color:       var(--md-sys-color-on-primary-container);
   }
 }
 
@@ -113,7 +113,7 @@ async function save(e?: Event) {
   flex-shrink: 0;
   margin-left: auto;
   transition:  opacity var(--transition-fast);
-  opacity:     0.8;
+  opacity:     0.7;
   gap:         var(--space-1);
 
   &--visible {
@@ -125,25 +125,35 @@ async function save(e?: Event) {
   display:         flex;
   align-items:     center;
   justify-content: center;
-  width:           28px;
-  height:          28px;
+  width:           40px;
+  height:          40px;
   transition:      all var(--transition-fast);
-  color:           var(--theme-c-text-muted);
-  border-radius:   9999px;
+  color:           var(--md-sys-color-on-surface-variant);
+  border:          none;
+  border-radius:   50%;
+  background:      transparent;
 }
 
 .page-chip-action:hover {
   color:      var(--theme-c-text);
-  background: var(--theme-c-card-bg-2);
+  background: var(--theme-c-active-bg);
 }
 
 .page-chip-action--danger:hover {
   color:      var(--theme-c-danger);
-  background: color-mix(in srgb, var(--theme-c-danger) 25%, transparent);
+  background: color-mix(in srgb, var(--theme-c-danger) 15%, transparent);
 }
 
 .page-chip-action svg {
-  width:  16px;
-  height: 16px;
+  width:  18px;
+  height: 18px;
+}
+
+.page-chip--discarded {
+  opacity: 0.5;
+
+  .page-chip-title {
+    text-decoration: line-through;
+  }
 }
 </style>

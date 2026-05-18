@@ -1,0 +1,54 @@
+/* Sage — 鼠尾草绿 */
+[data-color-scheme="sage"] {
+  --theme-c-text:       #172018;
+  --theme-c-page-bg:    oklch(0.97 0.013 145);
+  --theme-c-border:     oklch(0.88 0.02 145);
+  --theme-c-text-muted: #7f8c81;
+  --theme-c-accent:     #4f7657;
+  --theme-c-danger:     #9a6860;
+  --theme-c-card-bg:    oklch(0.95 0.018 145);
+  --theme-c-card-bg-2:  #deebe1;
+  --theme-c-overlay:    rgba(0, 0, 0, 0.3);
+
+  --md-sys-color-surface-container-lowest:  oklch(0.99 0.008 145);
+  --md-sys-color-surface-container-low:     oklch(0.975 0.01 145);
+  --md-sys-color-surface-container:         oklch(0.95 0.018 145);
+  --md-sys-color-surface-container-high:    oklch(0.91 0.022 145);
+  --md-sys-color-surface-container-highest: oklch(0.87 0.025 145);
+  --md-sys-color-primary-container:         #deebe1;
+  --md-sys-color-on-primary-container:      #f6fbf7;
+  --md-sys-color-outline:                   #7f8c81;
+  --md-sys-color-outline-variant:           oklch(0.88 0.02 145);
+  --md-sys-color-on-surface-variant:        #7f8c81;
+
+  --shadow-sm: 0 1px 3px 1px rgba(0, 0, 0, 0.08), 0 1px 2px 0 rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4px 8px 3px rgba(0, 0, 0, 0.1), 0 1px 3px 0 rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 8px 16px 4px rgba(0, 0, 0, 0.12), 0 2px 4px 0 rgba(0, 0, 0, 0.08);
+}
+
+[data-color-scheme="sage"].dark {
+  --theme-c-text:       #d8e3d7;
+  --theme-c-page-bg:    #172018;
+  --theme-c-border:     #3a4a3a;
+  --theme-c-text-muted: #6a7a6a;
+  --theme-c-accent:     #5a8a6a;
+  --theme-c-danger:     #c36a6a;
+  --theme-c-card-bg:    #252d25;
+  --theme-c-card-bg-2:  #1e261e;
+  --theme-c-overlay:    rgba(0, 0, 0, 0.5);
+
+  --md-sys-color-surface-container-lowest:  #0e140e;
+  --md-sys-color-surface-container-low:     #172018;
+  --md-sys-color-surface-container:         #252d25;
+  --md-sys-color-surface-container-high:    #2d372d;
+  --md-sys-color-surface-container-highest: #3a453a;
+  --md-sys-color-primary-container:         #3a4a3a;
+  --md-sys-color-on-primary-container:      #eef2eb;
+  --md-sys-color-outline:                   #6a7a6a;
+  --md-sys-color-outline-variant:           #3a4a3a;
+  --md-sys-color-on-surface-variant:        #6a7a6a;
+
+  --shadow-sm: 0 1px 3px 1px rgba(0, 0, 0, 0.3), 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 4px 8px 3px rgba(0, 0, 0, 0.35), 0 1px 3px 0 rgba(0, 0, 0, 0.25);
+  --shadow-lg: 0 8px 16px 4px rgba(0, 0, 0, 0.4), 0 2px 4px 0 rgba(0, 0, 0, 0.3);
+}
