@@ -72,6 +72,7 @@ export const useTabsStore = defineStore('tabs', () => {
         title: tab.title || 'Untitled',
         windowId: tab.windowId,
         active: tab.active || false,
+        discarded: tab.discarded || false,
         favIconUrl: tab.favIconUrl || '',
         isTabOut: false,
       })).filter(tab => !isExcludedTabUrl(tab.url))
@@ -120,6 +121,14 @@ export const useTabsStore = defineStore('tabs', () => {
     }
   }
 
+  async function discardTab(tabId: number) {
+    try {
+      await chrome.tabs.discard(tabId)
+    } catch (error) {
+      console.error('Failed to discard tab:', error)
+    }
+  }
+
   // 处理标签页创建
   function handleTabCreated(tab: chrome.tabs.Tab) {
     if (!tab.id) return
@@ -131,6 +140,7 @@ export const useTabsStore = defineStore('tabs', () => {
       title: tab.title || 'Untitled',
       windowId: tab.windowId,
       active: tab.active || false,
+      discarded: tab.discarded || false,
       favIconUrl: tab.favIconUrl || '',
       isTabOut: false,
     }
@@ -151,12 +161,27 @@ export const useTabsStore = defineStore('tabs', () => {
     }
     const index = tabs.value.findIndex(t => t.id === tabId)
     if (index === -1) {
+      // discard() 会改变标签页 ID，通过 URL+windowId 查找旧条目替换
+      const staleIndex = tabs.value.findIndex(t => t.url === (tab.url || '') && t.windowId === tab.windowId)
+      if (staleIndex !== -1) {
+        tabs.value[staleIndex] = {
+          ...tabs.value[staleIndex],
+          id: tabId,
+          url: tab.url || tabs.value[staleIndex].url,
+          title: tab.title || tabs.value[staleIndex].title,
+          favIconUrl: tab.favIconUrl || tabs.value[staleIndex].favIconUrl,
+          active: tab.active || false,
+          discarded: tab.discarded || false,
+        }
+        return
+      }
       tabs.value.push({
         id: tabId,
         url: tab.url || '',
         title: tab.title || 'Untitled',
         windowId: tab.windowId,
         active: tab.active || false,
+        discarded: tab.discarded || false,
         favIconUrl: tab.favIconUrl || '',
         isTabOut: false,
       })
@@ -169,6 +194,7 @@ export const useTabsStore = defineStore('tabs', () => {
       title: tab.title || tabs.value[index].title,
       favIconUrl: tab.favIconUrl || tabs.value[index].favIconUrl,
       active: tab.active || false,
+      discarded: tab.discarded || false,
     }
   }
 
@@ -212,6 +238,7 @@ export const useTabsStore = defineStore('tabs', () => {
     fetchTabs,
     closeTab,
     focusTab,
+    discardTab,
     closeDuplicateNewTabs,
     startListening,
     stopListening,

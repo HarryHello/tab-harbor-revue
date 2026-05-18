@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { BookmarkIcon, CloseIcon, GlobeIcon } from '@/components/icons';
+import { BookmarkIcon, CloseIcon, GlobeIcon, ZzzIcon } from '@/components/icons';
 import { useDeferredStore, useTabsStore } from '@/stores';
 import type { Tab } from '@/types';
 import { ref } from 'vue';
@@ -27,12 +27,17 @@ async function save(e?: Event) {
   await deferredStore.add(props.tab.url, props.tab.title);
   await tabsStore.closeTab(props.tab.id)
 }
+
+async function discard(e?: Event) {
+  e?.stopPropagation();
+  await tabsStore.discardTab(props.tab.id)
+}
 </script>
 
 <template>
   <div
     class="page-chip"
-    :class="{ 'page-chip--active': tab.active }"
+    :class="{ 'page-chip--active': tab.active, 'page-chip--discarded': tab.discarded }"
     @click="focus"
     @mouseenter="showActions = true"
     @mouseleave="showActions = false"
@@ -48,6 +53,9 @@ async function save(e?: Event) {
     <div class="page-chip-actions" :class="{ 'page-chip-actions--visible': showActions }">
       <button class="page-chip-action" title="Save for later" @click="save">
         <BookmarkIcon :size="16" />
+      </button>
+      <button v-if="!tab.active" class="page-chip-action" title="Discard" @click="discard">
+        <ZzzIcon :size="16" />
       </button>
       <button class="page-chip-action page-chip-action--danger" title="Close" @click="close">
         <CloseIcon :size="16" />
@@ -139,5 +147,13 @@ async function save(e?: Event) {
 .page-chip-action svg {
   width:  18px;
   height: 18px;
+}
+
+.page-chip--discarded {
+  opacity: 0.5;
+
+  .page-chip-title {
+    text-decoration: line-through;
+  }
 }
 </style>
