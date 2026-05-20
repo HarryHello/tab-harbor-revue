@@ -6,12 +6,27 @@ import type { DeferredItem } from '@/types';
 import { useDeferredStore } from '@/stores';
 import { getFaviconUrl, getInitial, getRandomColor, handleUrlSecurityCheck } from '@/utils/helpers';
 import { DeleteIcon } from '@/components/icons';
+import { ref, computed } from 'vue';
 
 const props = defineProps<{
   item: DeferredItem
 }>();
 
 const deferredStore = useDeferredStore();
+
+const imageError = ref(false);
+const useFallback = ref(false);
+
+const faviconResult = computed(() => getFaviconUrl(props.item.url));
+const currentSrc = computed(() => useFallback.value ? faviconResult.value.fallback : faviconResult.value.url);
+
+function handleImageError() {
+  if (!useFallback.value) {
+    useFallback.value = true;
+  } else {
+    imageError.value = true;
+  }
+}
 
 async function remove() {
   await deferredStore.remove(props.item.id);
@@ -64,10 +79,11 @@ async function openInNewTab() {
 <template>
   <div class="deferred-item">
     <img
-      v-if="getFaviconUrl(item.url)"
-      :src="getFaviconUrl(item.url)"
+      v-if="!imageError"
+      :src="currentSrc"
       class="deferred-item-favicon"
       alt=""
+      @error="handleImageError"
     />
     <div
       v-else

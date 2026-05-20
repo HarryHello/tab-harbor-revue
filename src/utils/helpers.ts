@@ -10,15 +10,42 @@ export function getDomain(urlStr: string): string {
 }
 
 /**
- * 从 URL 获取 favicon 地址
+ * 从 URL / 域名获取 favicon 地址
  */
-export function getFaviconUrl(url: string): string {
-  try {
-    const urlObj = new URL(url);
-    return `${urlObj.origin}/favicon.ico`;
-  } catch {
-    return '';
-  }
+export interface FaviconOptions {
+  domain: string;
+  size?: number;
+}
+
+export type FaviconSource = 'chrome' | 'default' | 'failed';
+
+export interface FaviconResult {
+  url: string;
+  source: FaviconSource;
+  fallback: string;
+}
+
+export function getFaviconUrl(input: string | FaviconOptions): FaviconResult {
+  const rawUrl = typeof input === 'string' ? input : input.domain;
+  const size = typeof input === 'string' ? 128 : (input.size ?? 128);
+
+  const cleanDomain = rawUrl.replace(/^https?:\/\//, '').replace(/\/.*$/, '');
+
+  const faviconBase = (typeof chrome !== 'undefined' && chrome.runtime?.getURL)
+    ? chrome.runtime.getURL('_favicon/')
+    : '';
+  const chromeUrl = faviconBase
+    ? `${faviconBase}?pageUrl=${encodeURIComponent(rawUrl)}&size=${size}`
+    : '';
+
+  // fallback: 站点根路径 favicon.ico
+  const fallbackUrl = `https://${cleanDomain}/favicon.ico`;
+
+  return {
+    url: chromeUrl,
+    source: 'chrome',
+    fallback: fallbackUrl,
+  };
 }
 
 /**

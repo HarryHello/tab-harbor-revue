@@ -2,10 +2,10 @@
   setup
   lang="ts"
 >
-import { ref } from 'vue';
-import { getFaviconUrl, getInitial, getRandomColor } from '@/utils/helpers';
 import QuickLinkFrame from '@/components/dashboard/QuickLinkFrame.vue';
 import type { QuickLink } from '@/types';
+import { getFaviconUrl, getInitial, getRandomColor } from '@/utils/helpers';
+import { computed, ref } from 'vue';
 
 const props = defineProps<{
   link: QuickLink;
@@ -14,9 +14,14 @@ const props = defineProps<{
 const emit = defineEmits<{
   click: [url: string];
   edit: [link: QuickLink];
+  delete: [link: QuickLink];
 }>();
 
 const imageError = ref(false);
+const useFallback = ref(false);
+
+const faviconResult = computed(() => getFaviconUrl({ domain: props.link.url }));
+const currentSrc = computed(() => useFallback.value ? faviconResult.value.fallback : faviconResult.value.url);
 
 function handleClick() {
   emit('click', props.link.url);
@@ -26,8 +31,17 @@ function handleEdit() {
   emit('edit', props.link);
 }
 
+function handleDelete() {
+  emit('delete', props.link);
+}
+
+
 function handleImageError() {
-  imageError.value = true;
+  if (!useFallback.value) {
+    useFallback.value = true;
+  } else {
+    imageError.value = true;
+  }
 }
 </script>
 
@@ -36,10 +50,12 @@ function handleImageError() {
     :title="link.title"
     @click_icon="handleClick"
     @edit_link="handleEdit"
+    @delete_link="handleDelete"
+    class="quick-link"
   >
     <div v-if="!imageError">
       <img
-        :src="getFaviconUrl(link.url)"
+        :src="currentSrc"
         :alt="link.title"
         class="link-favicon"
         @error="handleImageError"
@@ -60,6 +76,21 @@ function handleImageError() {
   scoped
   lang="scss"
 >
+.quick-link {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+    &:hover {
+      transform: translateY(-2);
+      transition: transform 0.2s ease-in-out;
+      .link-favicon {
+        filter: brightness(0.9);
+      }
+    }
+}
 .link-favicon {
   width:      28px;
   height:     28px;

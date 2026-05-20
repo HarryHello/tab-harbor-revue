@@ -27,14 +27,24 @@ const navItems = computed(() => {
     id: group.domain,
     label: group.domain.length > 12 ? group.domain.slice(0, 12) + '...' : group.domain,
     count: group.tabs.length,
-    faviconUrl: group.tabs[0]?.favIconUrl || getFaviconUrl(`https://${group.domain}`),
+    faviconUrl: group.tabs[0]?.favIconUrl || getFaviconSrc(group.domain),
   }));
 });
 
 const imageErrors = ref<Record<string, boolean>>({});
+const useFallback = ref<Record<string, boolean>>({});
 
 function handleImageError(domain: string) {
-  imageErrors.value[domain] = true;
+  if (!useFallback.value[domain]) {
+    useFallback.value[domain] = true;
+  } else {
+    imageErrors.value[domain] = true;
+  }
+}
+
+function getFaviconSrc(domain: string) {
+  const result = getFaviconUrl(`https://${domain}`);
+  return useFallback.value[domain] ? result.fallback : result.url;
 }
 
 let highlightTimer: ReturnType<typeof setTimeout> | null = null;
