@@ -82,10 +82,10 @@ function handleImageError() {
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: transform 0.2s ease-in-out;
 
     &:hover {
-      transform: translateY(-2);
-      transition: transform 0.2s ease-in-out;
+      transform: translateY(-2px);
       .link-favicon {
         filter: brightness(0.9);
       }
