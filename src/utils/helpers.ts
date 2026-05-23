@@ -3,7 +3,7 @@
  */
 export function getDomain(urlStr: string): string {
   try {
-    return new URL(urlStr).hostname.replace(/^www\./, '');
+    return new URL(urlStr.startsWith('http') ? urlStr : `https://${urlStr}`).hostname.replace(/^www\./, '');
   } catch {
     return urlStr;
   }
@@ -29,7 +29,7 @@ export function getFaviconUrl(input: string | FaviconOptions): FaviconResult {
   const rawUrl = typeof input === 'string' ? input : input.domain;
   const size = typeof input === 'string' ? 128 : (input.size ?? 128);
 
-  const cleanDomain = rawUrl.replace(/^https?:\/\//, '').replace(/\/.*$/, '');
+  const cleanDomain = getDomain(rawUrl);
 
   const faviconBase = (typeof chrome !== 'undefined' && chrome.runtime?.getURL)
     ? chrome.runtime.getURL('_favicon/')
