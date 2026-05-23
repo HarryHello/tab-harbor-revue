@@ -6,7 +6,8 @@
   "permissions": [
     "tabs",
     "storage",
-    "search"
+    "search",
+    "favicon"
   ],
   "background": {
     "service_worker": "extension/background.ts"

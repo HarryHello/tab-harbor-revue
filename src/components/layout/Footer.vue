@@ -32,7 +32,8 @@ const tabCount = computed(() => tabsStore.totalTabCount);
   align-items:     center;
   justify-content: space-between;
   padding:         var(--space-4) var(--space-6);
-  color:           var(--theme-c-text-muted);
+  color:           var(--md-sys-color-on-surface-variant);
+  border-top:      1px solid var(--md-sys-color-outline-variant);
 }
 
 .footer-stats {

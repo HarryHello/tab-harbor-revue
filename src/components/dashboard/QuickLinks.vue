@@ -2,13 +2,13 @@
   setup
   lang="ts"
 >
+import AddLinkItem from '@/components/dashboard/AddLinkItem.vue';
+import { useQuickLinksStore } from '@/stores/items';
+import type { QuickLink } from '@/types';
 import { onMounted, ref } from 'vue';
 import AddLinkForm from './AddLinkForm.vue';
 import EditLinkForm from './EditLinkForm.vue';
 import QuickLinkItem from './QuickLinkItem.vue';
-import AddLinkItem from '@/components/dashboard/AddLinkItem.vue';
-import type { QuickLink } from '@/types';
-import { useQuickLinksStore } from '@/stores/items';
 
 const props = defineProps<{
   showTitle?: boolean
@@ -123,6 +123,7 @@ function openLink(url: string) {
         :link="link"
         @click="handleLinkClick"
         @edit="handleEditLink"
+        @delete="quickLinksStore.remove(link.id)"
       />
 
       <AddLinkItem
@@ -156,10 +157,12 @@ function openLink(url: string) {
 }
 
 .quick-links-title {
-  font-size:     0.875rem;
-  margin-bottom: var(--space-3);
-  text-align:    left;
-  color:         var(--theme-c-text-muted);
+  font-size:      0.875rem;
+  font-weight:    500;
+  margin-bottom:  var(--space-3);
+  text-align:     left;
+  letter-spacing: 0.025em;
+  color:          var(--md-sys-color-on-surface-variant);
 }
 
 .links-grid {

@@ -272,7 +272,7 @@ function cancelEdit() {
 }
 
 .edit-btn--save {
-  color: white;
+  color: var(--md-sys-color-on-primary-container);
   background: var(--theme-c-accent);
 
   &:hover {

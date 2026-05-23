@@ -2,7 +2,7 @@
   setup
   lang="ts"
 >
-import MoreIcon from '@/components/icons/MoreIcon.vue';
+import EditIcon from '@/components/icons/EditIcon.vue';
 const props = withDefaults(defineProps<{
   hide_title?: boolean,
   is_add?: boolean,
@@ -15,6 +15,7 @@ const props = withDefaults(defineProps<{
 const emit = defineEmits<{
   click_icon: [],
   edit_link: [],
+  delete_link: [],
 }>();
 
 function handleClickIcon() {
@@ -46,7 +47,18 @@ function handleClickIcon() {
       title="Edit"
       @click="emit('edit_link')"
     >
-      <MoreIcon :size="14" />
+      <EditIcon :size="14" />
+    </button>
+
+    <button
+    class="link-delete"
+    title="Delete"
+    @click="emit('delete_link')"
+    >
+      <svg viewBox="0 0 24 24" fill="none">
+        <path d="M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
     </button>
   </div>
 
@@ -102,8 +114,8 @@ function handleClickIcon() {
   font-size:       14px;
   line-height:     1;
   position:        absolute;
-  top:             4px;
-  right:           4px;
+  top:             6px;
+  left:            8px;
   display:         flex;
   align-items:     center;
   justify-content: center;
@@ -120,7 +132,35 @@ function handleClickIcon() {
   svg {
     width:  14px;
     height: 14px;
-    transform: rotate(90deg);
+  }
+
+  &:hover {
+    opacity:    1;
+    background: color-mix(in srgb, var(--theme-c-active-bg) 50%, transparent);
+  }
+}
+.link-delete {
+  font-size:       14px;
+  line-height:     1;
+  position:        absolute;
+  top:             6px;
+  right:           8px;
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  width:           18px;
+  height:          18px;
+  cursor:          pointer;
+  transition:      opacity var(--transition-fast);
+  opacity:         0;
+  color:           var(--theme-c-text-muted);
+  border:          none;
+  border-radius:   50%;
+  background:      transparent;
+
+  svg {
+    width:  14px;
+    height: 14px;
   }
 
   &:hover {
@@ -129,7 +169,8 @@ function handleClickIcon() {
   }
 }
 
-.link-frame:hover .link-edit {
+.link-frame:hover .link-edit,
+.link-frame:hover .link-delete {
   opacity: 1;
 }
 </style>

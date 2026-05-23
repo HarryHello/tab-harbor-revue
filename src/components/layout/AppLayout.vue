@@ -33,7 +33,7 @@ import GroupNav from './GroupNav.vue';
 .app-main {
   flex:        1;
   padding:     var(--space-6);
-  padding-top: calc(60px + var(--space-6));
+  padding-top: calc(64px + var(--space-6));
 }
 
 .app-content {

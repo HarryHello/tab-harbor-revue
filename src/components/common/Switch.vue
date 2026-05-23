@@ -77,7 +77,7 @@ const toggle = () => {
       height:        $handle-size;
       transition:    all 0.2s ease-in-out;
       border-radius: 50%;
-      background:    white;
+      background:    var(--theme-c-page-bg);
       box-shadow:    var(--shadow-sm);
 
       &--active {

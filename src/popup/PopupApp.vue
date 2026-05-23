@@ -8,6 +8,7 @@ const settingsStore = useSettingsStore()
 const tabCount = ref(0)
 
 onMounted(async () => {
+  settingsStore.loadSettings()
   const tabs = await chrome.tabs.query({})
   tabCount.value = tabs.length
 })
@@ -36,7 +37,7 @@ async function openNewTab() {
 </script>
 
 <template>
-  <div class="popup" @click="openNewTab">
+  <div class="popup" @click="openNewTab" role="button" aria-label="Open Tab Harbor Vue" tabindex="0">
     <div class="logo">
       <img src="/icons/icon128.png" alt="" width="20" height="20">
     </div>
@@ -61,18 +62,18 @@ async function openNewTab() {
   gap: 12px;
   cursor: pointer;
   user-select: none;
-  background: var(--bg-primary, #fff);
-  color: var(--text-primary, #1f1f1f);
+  background: var(--theme-c-page-bg);
+  color: var(--theme-c-text);
   transition: background 0.15s;
   font-family: 'Google Sans', system-ui, sans-serif;
 }
 
 .popup:hover {
-  background: var(--bg-hover, #f5f5f5);
+  background: var(--theme-c-active-bg);
 }
 
 .popup:active {
-  background: var(--bg-active, #e8e8e8);
+  background: var(--theme-c-card-bg);
 }
 
 .logo {
@@ -82,7 +83,7 @@ async function openNewTab() {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--accent, #0b57d0);
+  color: var(--theme-c-accent);
 }
 
 .info {
@@ -94,18 +95,18 @@ async function openNewTab() {
   font-size: 14px;
   font-weight: 500;
   line-height: 1.3;
-  color: var(--text-primary, #1f1f1f);
+  color: var(--theme-c-text);
 }
 
 .subtitle {
   font-size: 12px;
   line-height: 1.3;
-  color: var(--text-secondary, #5f6368);
+  color: var(--theme-c-text-muted);
   margin-top: 2px;
 }
 
 .arrow {
   flex-shrink: 0;
-  color: var(--text-tertiary, #9aa0a6);
+  color: var(--md-sys-color-on-surface-variant);
 }
 </style>
